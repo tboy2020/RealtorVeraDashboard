@@ -137,6 +137,7 @@ textarea.inp{resize:vertical}
   <button class="tab" onclick="go('content',this)">📱 Content</button>
   <button class="tab" onclick="go('pipeline',this)">📊 Pipeline</button>
   <button class="tab" onclick="go('builds',this)">🏗️ Builds</button>
+  <button class="tab" onclick="go('profit',this)">💰 Profit</button>
 </div>
 <div id="body">
   <div id="pguide"    class="panel on"></div>
@@ -146,6 +147,7 @@ textarea.inp{resize:vertical}
   <div id="pcontent"  class="panel"></div>
   <div id="ppipeline" class="panel"></div>
   <div id="pbuilds"   class="panel"></div>
+  <div id="pprofit"   class="panel"></div>
 </div>
 <div id="toast"></div>
 
@@ -181,7 +183,7 @@ var TAGS={
 function tagBadge(t){var m=TAGS[t]||{l:t,bg:"#eee",c:"#666"};return '<span class="tag" style="background:'+m.bg+';color:'+m.c+'">'+m.l+'</span>';}
 function chip(color,lbl){return '<span class="chip" style="background:'+color+'22;color:'+color+'">'+esc(lbl)+'</span>';}
 
-var PANEL_IDS={guide:"pguide",planner:"pplanner",checklist:"pchecklist",clients:"pclients",content:"pcontent",pipeline:"ppipeline",builds:"pbuilds"};
+var PANEL_IDS={guide:"pguide",planner:"pplanner",checklist:"pchecklist",clients:"pclients",content:"pcontent",pipeline:"ppipeline",builds:"pbuilds",profit:"pprofit"};
 function go(id,btn){
   document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
   document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("on");});
@@ -573,7 +575,203 @@ function BLDE(id){BLD.editing=id;BLD.ef={};BLDR();}
 function BLDC(){BLD.editing=null;BLD.ef={};BLDR();}
 function BLDS(id){var b=BLD.data.find(function(x){return x.id===id;});if(b){if(BLD.ef.community!==undefined)b.community=BLD.ef.community;if(BLD.ef.location!==undefined)b.location=BLD.ef.location;if(BLD.ef.price!==undefined)b.price=BLD.ef.price;if(BLD.ef.status!==undefined)b.status=BLD.ef.status;if(BLD.ef.notes!==undefined)b.notes=BLD.ef.notes;}BLD.editing=null;BLD.ef={};BLDR();}
 
-/* ===================== SAVE / LOAD ===================== */
+/* ===================== PROFIT ===================== */
+var PROFIT={
+  inMentoring:true,
+  dealsCompleted:0,
+  capYear:2026, // current RedOne cap year (resets March 1)
+  capPaid:0,    // how much paid to RedOne this cap year
+  deals:[],     // {id, client, salePrice, date, year, grossComm, redOne, mentoring, vera}
+  open:false,
+  nd:{client:"",salePrice:"",date:""}
+};
+var CAP_LIMIT=6000;
+var COMM_RATE=0.03;
+
+function getCapYear(dateStr){
+  // cap year runs March 1 to Feb 28
+  var d=dateStr?new Date(dateStr):new Date();
+  var y=d.getFullYear();
+  var m=d.getMonth()+1; // 1-based
+  return m>=3?y:y-1;
+}
+
+function calcDeal(salePrice,dealsBeforeThis,capPaidBeforeThis){
+  var gross=salePrice*COMM_RATE;
+  // RedOne: 30% until $6000 cap per March year
+  var redOnePct=0.30;
+  var redOneAmt=gross*redOnePct;
+  var remaining=CAP_LIMIT-capPaidBeforeThis;
+  if(remaining<=0){redOneAmt=0;}
+  else if(redOneAmt>remaining){redOneAmt=remaining;}
+  // Mentoring
+  var mentAmt=0;
+  if(PROFIT.inMentoring){
+    var mentPct=dealsBeforeThis<6?0.20:0.10;
+    mentAmt=gross*mentPct;
+  }
+  var vera=gross-redOneAmt-mentAmt;
+  return {gross:gross,redOne:redOneAmt,mentoring:mentAmt,vera:vera};
+}
+
+function fmt(n){return "$"+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,",");}
+function fmtK(n){return n>=1000?"$"+(n/1000).toFixed(1)+"k":fmt(n);}
+
+function PRR(){
+  // group deals by cap year
+  var yearMap={};
+  var runningCapPaid=0;
+  var runningDeals=0;
+  // sort deals by date
+  var sorted=PROFIT.deals.slice().sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+  sorted.forEach(function(d){
+    var cy=getCapYear(d.date);
+    if(!yearMap[cy])yearMap[cy]={deals:[],grossTotal:0,redOneTotal:0,mentTotal:0,veraTotal:0};
+    yearMap[cy].deals.push(d);
+    yearMap[cy].grossTotal+=d.gross;
+    yearMap[cy].redOneTotal+=d.redOne;
+    yearMap[cy].mentTotal+=d.mentoring;
+    yearMap[cy].veraTotal+=d.vera;
+  });
+
+  // settings box
+  var mentStatus=PROFIT.inMentoring
+    ?(PROFIT.dealsCompleted<6
+      ?'<span style="color:#d4820a;font-weight:700">In Mentoring — Deal '+PROFIT.dealsCompleted+' of 6 (20% fee)</span>'
+      :'<span style="color:#2e7d32;font-weight:700">In Mentoring — 6 deals done! (10% fee now)</span>')
+    :'<span style="color:#888">Not in Mentoring Program</span>';
+
+  // current cap year progress
+  var curCapYear=getCapYear(null);
+  var capThisYear=0;
+  sorted.forEach(function(d){if(getCapYear(d.date)===curCapYear)capThisYear+=d.redOne;});
+  var capPct=Math.min(100,Math.round(capThisYear/CAP_LIMIT*100));
+  var capBar='<div style="margin-top:6px">'
+    +'<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px">'
+    +'<span>RedOne Cap '+curCapYear+'-'+(curCapYear+1)+'</span>'
+    +'<span>'+fmt(capThisYear)+' / '+fmt(CAP_LIMIT)+'</span></div>'
+    +'<div style="height:8px;background:var(--bdr);border-radius:4px">'
+    +'<div style="height:8px;background:'+(capPct>=100?'#27ae60':'#c47f00')+';border-radius:4px;width:'+capPct+'%"></div>'
+    +'</div>'
+    +(capPct>=100?'<div style="font-size:11px;color:#27ae60;font-weight:700;margin-top:4px">✅ Cap met! RedOne = $0 for rest of year</div>':'')
+    +'</div>';
+
+  var settings='<div class="box mb10">'
+    +'<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px">⚙️ Commission Settings</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">'
+    +'<div style="background:var(--card2);border-radius:10px;padding:12px">'
+    +'<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Commission Rate</div>'
+    +'<div style="font-size:18px;font-weight:700;color:var(--txt)">3%</div>'
+    +'<div style="font-size:10px;color:var(--muted)">of sale price</div>'
+    +'</div>'
+    +'<div style="background:var(--card2);border-radius:10px;padding:12px">'
+    +'<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">RedOne Cut</div>'
+    +'<div style="font-size:18px;font-weight:700;color:var(--txt)">30%</div>'
+    +'<div style="font-size:10px;color:var(--muted)">until $6k cap (Mar-Feb)</div>'
+    +'</div>'
+    +'</div>'
+    +capBar
+    +'<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--bdr)">'
+    +'<div style="font-size:12px;margin-bottom:8px">'+mentStatus+'</div>'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
+    +'<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">'
+    +'<input type="checkbox" '+(PROFIT.inMentoring?"checked":"")+' onchange="PROFIT.inMentoring=this.checked;PRR()" style="width:18px;height:18px;cursor:pointer"/>'
+    +'Currently in Mentoring Program</label>'
+    +'</div>'
+    +'<div style="margin-top:8px;display:flex;align-items:center;gap:8px">'
+    +'<span style="font-size:13px">Deals completed:</span>'
+    +'<button class="sbtn sml" onclick="if(PROFIT.dealsCompleted>0)PROFIT.dealsCompleted--;PRR()">−</button>'
+    +'<span style="font-size:16px;font-weight:700;color:var(--gold);min-width:24px;text-align:center">'+PROFIT.dealsCompleted+'</span>'
+    +'<button class="sbtn sml" onclick="PROFIT.dealsCompleted++;PRR()">+</button>'
+    +'<span style="font-size:11px;color:var(--muted)">'+(PROFIT.dealsCompleted<6?(6-PROFIT.dealsCompleted)+" more to 10% mentoring":"✅ 10% mentoring rate active")+'</span>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+
+  // add deal form
+  var addForm=PROFIT.open?'<div class="box hi mb10">'
+    +'<div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:10px">Add Closed Deal</div>'
+    +'<div class="g2">'
+    +'<input class="inp" placeholder="Client name" oninput="PROFIT.nd.client=this.value" value="'+esc(PROFIT.nd.client)+'"/>'
+    +'<input class="inp" placeholder="Sale price e.g. 280000" oninput="PROFIT.nd.salePrice=this.value" value="'+esc(PROFIT.nd.salePrice)+'"/>'
+    +'</div>'
+    +'<input class="inp mb8" type="date" oninput="PROFIT.nd.date=this.value" value="'+esc(PROFIT.nd.date)+'"/>'
+    +'<div class="row"><button class="gbtn" onclick="PRAdd()">Save Deal</button><button class="sbtn" onclick="PROFIT.open=false;PRR()">Cancel</button></div>'
+    +'</div>':"";
+
+  // year summaries
+  var years=Object.keys(yearMap).sort(function(a,b){return b-a;});
+  var yearCards=years.map(function(cy){
+    var yd=yearMap[cy];
+    var dealRows=yd.deals.map(function(d){
+      return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:4px;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:12px;align-items:center">'
+        +'<div><div style="font-weight:600">'+esc(d.client)+'</div><div style="color:var(--muted);font-size:10px">'+esc(d.date)+(d.salePrice?' · '+fmtK(+d.salePrice):"")+'</div></div>'
+        +'<div style="color:var(--muted)">'+fmtK(d.gross)+'</div>'
+        +'<div style="color:#c0392b">-'+fmtK(d.redOne)+'</div>'
+        +'<div style="color:#d4820a">-'+fmtK(d.mentoring)+'</div>'
+        +'<div style="color:#27ae60;font-weight:700">'+fmtK(d.vera)+'</div>'
+        +'</div>';
+    }).join("");
+    var label=cy+"-"+(+cy+1)+" (Mar–Feb)";
+    return '<div class="box mb10">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
+      +'<div style="font-size:15px;font-weight:700">📆 Year '+label+'</div>'
+      +'<div style="text-align:right"><div style="font-size:10px;color:var(--muted)">Take-Home</div><div style="font-size:20px;font-weight:700;color:#27ae60">'+fmt(yd.veraTotal)+'</div></div>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">'
+      +'<div style="background:var(--card2);border-radius:8px;padding:10px;text-align:center">'
+      +'<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Gross</div>'
+      +'<div style="font-size:16px;font-weight:700;color:var(--txt)">'+fmtK(yd.grossTotal)+'</div></div>'
+      +'<div style="background:#fff0f0;border-radius:8px;padding:10px;text-align:center">'
+      +'<div style="font-size:10px;color:#c0392b;text-transform:uppercase;letter-spacing:.4px">RedOne</div>'
+      +'<div style="font-size:16px;font-weight:700;color:#c0392b">-'+fmtK(yd.redOneTotal)+'</div></div>'
+      +'<div style="background:#fff8e8;border-radius:8px;padding:10px;text-align:center">'
+      +'<div style="font-size:10px;color:#d4820a;text-transform:uppercase;letter-spacing:.4px">Mentoring</div>'
+      +'<div style="font-size:16px;font-weight:700;color:#d4820a">-'+fmtK(yd.mentTotal)+'</div></div>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:4px;padding:6px 0;border-bottom:2px solid var(--bdr)">'
+      +'<div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Deal</div>'
+      +'<div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Gross</div>'
+      +'<div style="font-size:10px;font-weight:700;color:#c0392b;text-transform:uppercase">RedOne</div>'
+      +'<div style="font-size:10px;font-weight:700;color:#d4820a;text-transform:uppercase">Ment.</div>'
+      +'<div style="font-size:10px;font-weight:700;color:#27ae60;text-transform:uppercase">Vera</div>'
+      +'</div>'
+      +dealRows
+      +'</div>';
+  }).join("");
+
+  var emptyMsg=years.length?"":'<div class="empty">No deals yet — add your first closed deal above!</div>';
+
+  document.getElementById("pprofit").innerHTML=
+    '<div class="rowsb mb10"><div class="ptitle">💰 Profit Tracker</div><button class="gbtn" onclick="PROFIT.open=!PROFIT.open;PRR()">+ Add Deal</button></div>'
+    +settings+addForm+yearCards+emptyMsg;
+  save();
+}
+
+function PRAdd(){
+  var sp=parseFloat((PROFIT.nd.salePrice||"").replace(/[^0-9.]/g,""));
+  if(!PROFIT.nd.client.trim()||isNaN(sp)||sp<=0){toast("Please enter client name and valid sale price");return;}
+  var dateStr=PROFIT.nd.date||new Date().toISOString().split("T")[0];
+  var cy=getCapYear(dateStr);
+  // calc cap paid so far this cap year
+  var capPaidSoFar=PROFIT.deals.filter(function(d){return getCapYear(d.date)===cy;}).reduce(function(s,d){return s+d.redOne;},0);
+  var res=calcDeal(sp,PROFIT.dealsCompleted,capPaidSoFar);
+  PROFIT.deals.push({
+    id:"d"+Date.now(),
+    client:PROFIT.nd.client,
+    salePrice:sp,
+    date:dateStr,
+    gross:res.gross,
+    redOne:res.redOne,
+    mentoring:res.mentoring,
+    vera:res.vera
+  });
+  PROFIT.dealsCompleted++;
+  PROFIT.nd={client:"",salePrice:"",date:""};
+  PROFIT.open=false;
+  toast("Deal added! Vera earns "+fmt(res.vera)+" 🎉");
+  PRR();
+}
 function save(){
   try{localStorage.setItem("vpl",JSON.stringify(PL.tasks));}catch(e){}
   try{localStorage.setItem("vcl",JSON.stringify(CL.items));}catch(e){}
@@ -600,7 +798,7 @@ document.addEventListener("keydown",function(ev){
 
 /* ===================== INIT ===================== */
 load();
-GUIDER();PLR();CLR();CLIR();CONR();PIPR();BLDR();
+GUIDER();PLR();CLR();CLIR();CONR();PIPR();BLDR();PRR();
 </script>
 </body>
 </html>

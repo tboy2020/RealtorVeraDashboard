@@ -154,6 +154,47 @@ textarea.inp{resize:vertical}
 </div>
 <div id="alert-panel"></div>
 <div id="toast"></div>
+
+<!-- Voice Button -->
+<button id="voice-btn" onclick="voiceStart()" title="Speak a command">🎤</button>
+
+<!-- Voice Modal -->
+<div id="voice-modal">
+  <div id="voice-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:16px;font-weight:700;color:var(--gold)">🎤 Voice Command</div>
+      <button onclick="voiceClose()" style="background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer">×</button>
+    </div>
+    <div id="voice-status">Tap the mic and speak your command</div>
+    <div id="voice-transcript" style="color:var(--dim)">e.g. "Add a meeting with Suzel on Friday at 2pm"</div>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button id="voice-mic-btn" class="gbtn" style="flex:1" onclick="voiceListen()">🎤 Start Speaking</button>
+      <button class="sbtn" onclick="voiceProcess()" id="voice-process-btn" style="display:none">✨ Process</button>
+    </div>
+    <!-- Confirmation box -->
+    <div id="voice-confirm-box">
+      <div class="confirm-title">✅ Review before saving:</div>
+      <div id="voice-confirm-fields"></div>
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button class="gbtn" style="flex:1" onclick="voiceConfirm()">Save ✓</button>
+        <button class="sbtn" onclick="voiceRetry()">Try Again</button>
+        <button class="sbtn red" onclick="voiceClose()">Cancel</button>
+      </div>
+    </div>
+    <!-- Examples -->
+    <div id="voice-examples">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Example commands:</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div onclick="voiceSetExample(this.textContent)" style="font-size:12px;color:var(--blue);background:#e3f2fd;border-radius:8px;padding:7px 10px;cursor:pointer">📅 "Add meeting with Suzel on Friday at 2pm at Starbucks"</div>
+        <div onclick="voiceSetExample(this.textContent)" style="font-size:12px;color:var(--blue);background:#e3f2fd;border-radius:8px;padding:7px 10px;cursor:pointer">✅ "Add to checklist: call Lucy at noon today"</div>
+        <div onclick="voiceSetExample(this.textContent)" style="font-size:12px;color:var(--blue);background:#e3f2fd;border-radius:8px;padding:7px 10px;cursor:pointer">📊 "Move Zion to Under Contract"</div>
+        <div onclick="voiceSetExample(this.textContent)" style="font-size:12px;color:var(--blue);background:#e3f2fd;border-radius:8px;padding:7px 10px;cursor:pointer">💰 "I closed a deal with Lucy sale price 310000"</div>
+        <div onclick="voiceSetExample(this.textContent)" style="font-size:12px;color:var(--blue);background:#e3f2fd;border-radius:8px;padding:7px 10px;cursor:pointer">🎓 "Add training HVAC certification next Monday at 9am"</div>
+        <div onclick="voiceSetExample(this.textContent)" style="font-size:12px;color:var(--blue);background:#e3f2fd;border-radius:8px;padding:7px 10px;cursor:pointer">👥 "Add client John Smith buyer high priority"</div>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
 var DN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 var MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -651,7 +692,225 @@ function GUIDER(){
   +'<div style="text-align:center;margin-top:20px"><button class="gbtn" onclick="goTab(\'today\')">Go to Today ☀️</button></div>';
 }
 
-/* ===================== SAVE / LOAD ===================== */
+/* ===================== VOICE ENGINE ===================== */
+var VoiceRecog=window.SpeechRecognition||window.webkitSpeechRecognition||null;
+var voiceRec=null;
+var voiceText="";
+var voicePending=null; // parsed action waiting to confirm
+
+function voiceStart(){
+  document.getElementById("voice-modal").classList.add("show");
+  document.getElementById("voice-confirm-box").style.display="none";
+  document.getElementById("voice-examples").style.display="block";
+  document.getElementById("voice-process-btn").style.display="none";
+  document.getElementById("voice-transcript").style.color="var(--dim)";
+  document.getElementById("voice-transcript").textContent='e.g. "Add a meeting with Suzel on Friday at 2pm"';
+  document.getElementById("voice-status").textContent="Tap the mic and speak your command";
+  document.getElementById("voice-mic-btn").textContent="🎤 Start Speaking";
+}
+function voiceClose(){
+  document.getElementById("voice-modal").classList.remove("show");
+  document.getElementById("voice-btn").classList.remove("listening");
+  if(voiceRec){try{voiceRec.stop();}catch(e){}}
+  voiceRec=null;voiceText="";voicePending=null;
+}
+function voiceRetry(){
+  document.getElementById("voice-confirm-box").style.display="none";
+  document.getElementById("voice-examples").style.display="block";
+  document.getElementById("voice-process-btn").style.display="none";
+  document.getElementById("voice-transcript").style.color="var(--dim)";
+  document.getElementById("voice-transcript").textContent='Try again — tap the mic and speak';
+  document.getElementById("voice-status").textContent="Tap the mic and speak your command";
+  voiceText="";voicePending=null;
+}
+function voiceSetExample(txt){
+  // strip emoji prefix
+  var clean=txt.replace(/^[^\w"]+/,"").replace(/^"+|"+$/g,"").trim();
+  document.getElementById("voice-transcript").textContent=clean;
+  document.getElementById("voice-transcript").style.color="var(--txt)";
+  voiceText=clean;
+  document.getElementById("voice-process-btn").style.display="block";
+  document.getElementById("voice-status").textContent="Tap ✨ Process to run this command";
+}
+function voiceListen(){
+  if(!VoiceRecog){
+    // fallback: manual text input
+    var t=prompt("Voice not supported on this browser.\nType your command:");
+    if(t&&t.trim()){voiceText=t.trim();document.getElementById("voice-transcript").textContent=voiceText;document.getElementById("voice-transcript").style.color="var(--txt)";document.getElementById("voice-process-btn").style.display="block";document.getElementById("voice-status").textContent="Command ready — tap ✨ Process";}
+    return;
+  }
+  voiceRec=new VoiceRecog();
+  voiceRec.lang="en-US";
+  voiceRec.interimResults=true;
+  voiceRec.maxAlternatives=1;
+  document.getElementById("voice-btn").classList.add("listening");
+  document.getElementById("voice-mic-btn").textContent="🔴 Listening...";
+  document.getElementById("voice-status").textContent="Speak now...";
+  document.getElementById("voice-examples").style.display="none";
+  voiceRec.onresult=function(e){
+    var interim="";var final="";
+    for(var i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)final+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
+    }
+    document.getElementById("voice-transcript").textContent=final||interim;
+    document.getElementById("voice-transcript").style.color="var(--txt)";
+    if(final)voiceText=final;
+  };
+  voiceRec.onend=function(){
+    document.getElementById("voice-btn").classList.remove("listening");
+    document.getElementById("voice-mic-btn").textContent="🎤 Speak Again";
+    if(voiceText.trim()){
+      document.getElementById("voice-process-btn").style.display="block";
+      document.getElementById("voice-status").textContent="Got it! Tap ✨ Process to continue";
+    } else {
+      document.getElementById("voice-status").textContent="Nothing heard — try again";
+    }
+  };
+  voiceRec.onerror=function(e){
+    document.getElementById("voice-btn").classList.remove("listening");
+    document.getElementById("voice-mic-btn").textContent="🎤 Try Again";
+    document.getElementById("voice-status").textContent="Error: "+e.error+". Try again or use an example below.";
+    document.getElementById("voice-examples").style.display="block";
+  };
+  voiceRec.start();
+}
+
+function voiceProcess(){
+  var cmd=voiceText.trim();
+  if(!cmd){toast("No command to process");return;}
+  document.getElementById("voice-status").textContent="✨ Processing with AI...";
+  document.getElementById("voice-process-btn").textContent="Processing...";
+  document.getElementById("voice-process-btn").disabled=true;
+
+  // build context for AI
+  var clientNames=CLI.data.map(function(c){return c.name;}).join(", ");
+  var today=todayStr();
+  var todayDate=new Date();
+  var dayName=DN[todayDate.getDay()];
+
+  var prompt="You are a smart assistant for a real estate agent named Vera. Today is "+dayName+" "+today+". Her clients are: "+clientNames+".\n\n"
+    +"Parse this voice command and return ONLY a JSON object (no markdown, no explanation).\n\n"
+    +"Command: \""+cmd+"\"\n\n"
+    +"Return one of these JSON structures based on what the command is about:\n\n"
+    +"For a MEETING: {\"action\":\"meeting\",\"title\":\"...\",\"type\":\"Client Meeting|Builder Meeting|Lender Meeting|Team Meeting|Other\",\"date\":\"YYYY-MM-DD\",\"time\":\"...\",\"location\":\"...\",\"notes\":\"...\",\"linkedClient\":\"...or empty\"}\n\n"
+    +"For a CHECKLIST item: {\"action\":\"checklist\",\"task\":\"...\"}\n\n"
+    +"For a PLANNER task: {\"action\":\"planner\",\"title\":\"...\",\"time\":\"...\",\"desc\":\"...\",\"tag\":\"client|network|search|content|training|meeting\",\"date\":\"YYYY-MM-DD\"}\n\n"
+    +"For a PIPELINE stage change: {\"action\":\"pipeline_stage\",\"client\":\"...\",\"stage\":\"Consultation|Agreement Sent|Searching|Land Search|Under Contract|Closed\"}\n\n"
+    +"For a PROFIT/deal: {\"action\":\"deal\",\"client\":\"...\",\"salePrice\":123000,\"date\":\"YYYY-MM-DD\"}\n\n"
+    +"For a TRAINING: {\"action\":\"training\",\"title\":\"...\",\"provider\":\"...\",\"date\":\"YYYY-MM-DD\",\"time\":\"...\",\"location\":\"...\",\"notes\":\"...\"}\n\n"
+    +"For a CLIENT: {\"action\":\"client\",\"name\":\"...\",\"type\":\"Buyer|Seller|Network|Builder\",\"priority\":\"high|medium|low\",\"status\":\"...\",\"note\":\"...\"}\n\n"
+    +"For a NOTE on a client: {\"action\":\"client_note\",\"client\":\"...\",\"note\":\"...\",\"date\":\""+today+"\"}\n\n"
+    +"Rules: Resolve relative dates like 'tomorrow', 'Friday', 'next Monday' to actual YYYY-MM-DD dates relative to today "+today+". If a client name is close to one in the list, use the exact name from the list. If you cannot parse the command, return {\"action\":\"unknown\",\"message\":\"Could not understand command\"}.";
+
+  fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      model:"claude-sonnet-4-20250514",
+      max_tokens:400,
+      messages:[{role:"user",content:prompt}]
+    })
+  }).then(function(r){return r.json();})
+  .then(function(data){
+    document.getElementById("voice-process-btn").textContent="✨ Process";
+    document.getElementById("voice-process-btn").disabled=false;
+    var text="";
+    try{text=data.content[0].text.trim();}catch(e){}
+    // strip markdown if present
+    text=text.replace(/```json|```/g,"").trim();
+    var parsed;
+    try{parsed=JSON.parse(text);}catch(e){
+      document.getElementById("voice-status").textContent="❌ Could not parse response. Try rephrasing.";
+      return;
+    }
+    if(parsed.action==="unknown"){
+      document.getElementById("voice-status").textContent="❓ "+parsed.message;
+      return;
+    }
+    voicePending=parsed;
+    voiceShowConfirm(parsed);
+  }).catch(function(err){
+    document.getElementById("voice-process-btn").textContent="✨ Process";
+    document.getElementById("voice-process-btn").disabled=false;
+    document.getElementById("voice-status").textContent="❌ Network error. Check connection.";
+  });
+}
+
+function voiceShowConfirm(p){
+  document.getElementById("voice-examples").style.display="none";
+  document.getElementById("voice-confirm-box").style.display="block";
+  var fields=[];
+  if(p.action==="meeting"){
+    fields=[["Action","📅 Add Meeting"],["Title",p.title],["Type",p.type],["Date",p.date],["Time",p.time||"—"],["Location",p.location||"—"],["Linked Client",p.linkedClient||"—"],["Notes",p.notes||"—"]];
+  } else if(p.action==="checklist"){
+    fields=[["Action","✅ Add to Today's Checklist"],["Task",p.task]];
+  } else if(p.action==="planner"){
+    fields=[["Action","📌 Add to Planner"],["Title",p.title],["Date",p.date],["Time",p.time||"—"],["Tag",p.tag]];
+  } else if(p.action==="pipeline_stage"){
+    fields=[["Action","📊 Update Pipeline Stage"],["Client",p.client],["New Stage",p.stage]];
+  } else if(p.action==="deal"){
+    fields=[["Action","💰 Add Closed Deal"],["Client",p.client],["Sale Price","$"+Number(p.salePrice).toLocaleString()],["Date",p.date]];
+  } else if(p.action==="training"){
+    fields=[["Action","🎓 Add Training"],["Title",p.title],["Provider",p.provider||"—"],["Date",p.date||"—"],["Time",p.time||"—"],["Location",p.location||"—"]];
+  } else if(p.action==="client"){
+    fields=[["Action","👥 Add Client"],["Name",p.name],["Type",p.type],["Priority",p.priority],["Status",p.status||"Active"]];
+  } else if(p.action==="client_note"){
+    fields=[["Action","📝 Add Client Note"],["Client",p.client],["Note",p.note],["Date",p.date]];
+  }
+  var html=fields.map(function(f){return '<div class="confirm-field"><span class="confirm-key">'+f[0]+'</span><span class="confirm-val">'+esc(String(f[1]||""))+'</span></div>';}).join("");
+  document.getElementById("voice-confirm-fields").innerHTML=html;
+  document.getElementById("voice-status").textContent="Does this look right?";
+}
+
+function voiceConfirm(){
+  var p=voicePending;
+  if(!p){voiceClose();return;}
+  try{
+    if(p.action==="meeting"){
+      MTG.data.push({id:Date.now(),title:p.title,type:p.type,date:p.date,time:p.time||"",location:p.location||"",notes:p.notes||"",status:"Scheduled",linkedClient:p.linkedClient||""});
+      if(p.date){var d=new Date(p.date+"T12:00:00");var k=fk(d);if(!PL.tasks[k])PL.tasks[k]=[];PL.tasks[k].push({id:"mtg"+Date.now(),time:p.time||"",title:"MEETING: "+p.title,desc:p.type+(p.location?" @ "+p.location:""),tag:"meeting",done:false});}
+      save();MTGR();toast("Meeting added ✅");
+    } else if(p.action==="checklist"){
+      var k=fk(TODAY);if(!CL.items[k])CL.items[k]=[];
+      CL.items[k].push({id:"v"+Date.now(),task:p.task,done:false});
+      save();CLR();toast("Added to checklist ✅");
+    } else if(p.action==="planner"){
+      var k2=p.date?fk(new Date(p.date+"T12:00:00")):fk(TODAY);
+      if(!PL.tasks[k2])PL.tasks[k2]=[];
+      PL.tasks[k2].push({id:"v"+Date.now(),time:p.time||"",title:p.title,desc:p.desc||"",tag:p.tag||"client",done:false});
+      save();PLR();toast("Added to Planner ✅");
+    } else if(p.action==="pipeline_stage"){
+      var lead=PIP.data.find(function(l){return l.name.toLowerCase()===p.client.toLowerCase()||l.name.toLowerCase().indexOf(p.client.toLowerCase())>-1;});
+      if(lead){stageChange(lead.id,p.stage);toast("Pipeline updated ✅");}
+      else{toast("Client not found in pipeline");}
+    } else if(p.action==="deal"){
+      var ds=p.date||todayStr();var cy=getCapYear(ds);
+      var capPaid=PROFIT.deals.filter(function(d){return getCapYear(d.date)===cy;}).reduce(function(s,d){return s+d.redOne;},0);
+      var res=calcDeal(p.salePrice,PROFIT.dealsCompleted,capPaid);
+      PROFIT.deals.push({id:"d"+Date.now(),client:p.client,salePrice:p.salePrice,date:ds,gross:res.gross,redOne:res.redOne,mentoring:res.mentoring,vera:res.vera});
+      PROFIT.dealsCompleted++;save();PRR();toast("Deal added! Vera earns "+fmt(res.vera)+" 🎉");
+    } else if(p.action==="training"){
+      TRN.data.push({id:Date.now(),title:p.title,provider:p.provider||"",date:p.date||"",time:p.time||"",location:p.location||"",notes:p.notes||"",completed:false,certificate:false});
+      if(p.date){var d2=new Date(p.date+"T12:00:00");var k3=fk(d2);if(!PL.tasks[k3])PL.tasks[k3]=[];PL.tasks[k3].push({id:"trn"+Date.now(),time:p.time||"",title:"TRAINING: "+p.title,desc:p.provider||"",tag:"training",done:false});}
+      save();TRNR();toast("Training added ✅");
+    } else if(p.action==="client"){
+      CLI.data.push({id:Date.now(),name:p.name,type:p.type||"Buyer",status:p.status||"Active",priority:p.priority||"medium",note:p.note||"",addedDate:todayStr()});
+      save();CLIR();toast("Client added ✅");
+    } else if(p.action==="client_note"){
+      var client=CLI.data.find(function(c){return c.name.toLowerCase()===p.client.toLowerCase()||c.name.toLowerCase().indexOf(p.client.toLowerCase())>-1;});
+      if(client){
+        if(!CLI.notes[client.id])CLI.notes[client.id]=[];
+        CLI.notes[client.id].unshift({id:"n"+Date.now(),text:p.note,date:p.date||todayStr()});
+        client.lastContact=p.date||todayStr();
+        save();CLIR();toast("Note added for "+client.name+" ✅");
+      } else {toast("Client not found");}
+    }
+  } catch(err){toast("Error saving. Please try again.");}
+  voiceClose();
+  if(ACTIVE==="today")TODAYR();
+  updateAlertBell();
+}
 function save(){
   try{localStorage.setItem("vpl",JSON.stringify(PL.tasks));}catch(e){}
   try{localStorage.setItem("vcl",JSON.stringify(CL.items));}catch(e){}

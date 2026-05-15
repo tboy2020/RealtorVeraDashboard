@@ -6,160 +6,191 @@
 <title>RealtorVera · Command Center</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--bg:#f5f5f0;--card:#fff;--card2:#f0efea;--bdr:#e0ddd5;--bdr2:#d0cdc5;--txt:#1a1a1a;--muted:#888;--dim:#bbb;--gold:#c47f00;--green:#2e7d32;--blue:#1565c0;--red:#c62828;--orange:#e65100}
+:root{--bg:#f5f5f0;--card:#fff;--card2:#f0efea;--bdr:#e0ddd5;--bdr2:#d0cdc5;--txt:#1a1a1a;--muted:#888;--dim:#bbb;--gold:#c47f00;--green:#2e7d32;--blue:#1565c0;--red:#c62828;--purple:#6a1b9a}
 body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;-webkit-text-size-adjust:100%}
 button{font-family:inherit;cursor:pointer;touch-action:manipulation}
 input,select,textarea{font-family:inherit;font-size:16px}
-#hdr{background:linear-gradient(135deg,#fffaf0,#fff8e8 50%,#fffaf0);border-bottom:1px solid #e8d8b0;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+
+/* header */
+#hdr{background:linear-gradient(135deg,#fffaf0,#fff8e8 50%,#fffaf0);border-bottom:1px solid #e8d8b0;padding:13px 18px;display:flex;align-items:center;justify-content:space-between}
 .logo{font-size:16px;font-weight:700;color:#b06a00}
 .sub{font-size:11px;color:#a08060;margin-top:2px}
 #alert-bell{position:relative;background:none;border:none;font-size:22px;cursor:pointer;padding:4px}
 #alert-count{position:absolute;top:0;right:0;background:#c62828;color:#fff;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center}
+
+/* tabs */
 #tabs{display:flex;background:#fff;border-bottom:1px solid var(--bdr);overflow-x:auto;padding:0 14px;scrollbar-width:none}
 #tabs::-webkit-scrollbar{display:none}
 .tab{font-size:11px;font-weight:600;padding:11px 10px;border:none;background:none;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
 .tab.on{color:var(--gold);border-bottom:2px solid var(--gold)}
-#body{padding:16px 14px;max-width:860px;margin:0 auto}
+
+/* body */
+#body{padding:14px 14px;max-width:860px;margin:0 auto}
 .panel{display:none}.panel.on{display:block}
-.box{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:16px;margin-bottom:10px}
+
+/* cards */
+.box{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:14px;margin-bottom:10px}
 .box.hi{border-color:#e8d8b0}.box.faded{opacity:.5}
-.box.red{border-color:#ef9a9a;background:#fff5f5}
 .box.amber{border-color:#ffe082;background:#fffde7}
 .box.green{border-color:#a5d6a7;background:#f0faf0}
 .box.blue{border-color:#90caf9;background:#f0f7ff}
+.box.red{border-color:#ef9a9a;background:#fff5f5}
+
+/* typography */
 .ptitle{font-size:18px;font-weight:700;color:var(--gold)}
-.section{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--bdr)}
+.section{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--bdr)}
+
+/* buttons */
 .gbtn{background:var(--gold);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-size:13px;font-weight:700;min-height:44px}
 .sbtn{background:var(--card2);color:var(--gold);border:1px solid var(--bdr2);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;min-height:38px}
 .sbtn.grn{background:#e8f5e9;border-color:#81c784;color:#2e7d32}
 .sbtn.blu{background:#e3f2fd;border-color:#90caf9;color:#1565c0}
-.sbtn.red{background:#ffebee;border-color:#ef9a9a;color:#c62828}
 .sbtn.sml{padding:4px 10px;font-size:11px;min-height:30px}
+.sbtn.red{background:#ffebee;border-color:#ef9a9a;color:#c62828}
 .xbtn{background:none;border:none;color:var(--dim);font-size:22px;padding:4px 6px;line-height:1;flex-shrink:0}
+
+/* inputs */
 .inp{background:var(--card2);border:1px solid var(--bdr2);border-radius:8px;padding:10px 12px;color:var(--txt);width:100%;outline:none;display:block}
 .inp::placeholder{color:var(--muted)}
 textarea.inp{resize:vertical}
+
+/* grids */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+
+/* stats */
 .stat{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:12px 14px}
 .stat .sn{font-size:22px;font-weight:700;color:var(--gold);line-height:1}
 .stat .sl{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
-.wknav{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.rng{flex:1;text-align:center}
-.r1{font-size:12px;color:var(--muted);font-weight:500}
-.r2{font-size:10px;color:var(--dim);margin-top:3px}
-.r2 kbd{background:var(--card2);border:1px solid var(--bdr2);border-radius:3px;padding:1px 5px;font-size:10px;color:var(--muted)}
+
+/* week nav */
+.wknav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.rng{flex:1;text-align:center;font-size:12px;color:var(--muted);font-weight:500}
 .arw{background:var(--card2);border:1px solid var(--bdr);border-radius:10px;color:var(--gold);font-size:22px;width:40px;height:40px;line-height:40px;text-align:center;flex-shrink:0}
-.dgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:14px}
-.dc{border-radius:10px;padding:8px 2px;cursor:pointer;text-align:center;background:var(--card);border:1px solid var(--bdr);user-select:none}
+
+/* day grid */
+.dgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px}
+.dc{border-radius:10px;padding:8px 2px;cursor:pointer;text-align:center;background:var(--card);border:1px solid var(--bdr);user-select:none;transition:all .15s}
 .dc.wknd{background:#f0f0fa;border-color:#d8d8ee}
 .dc.tod{background:#fff8e8;border-color:#f0d080}
 .dc.sel{background:var(--gold);border-color:var(--gold)}
-.dn{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.dc.hasstuff{border-color:#c47f00}
+.dn{font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted)}
 .dc.wknd .dn{color:#8888bb}.dc.tod .dn{color:#b06a00}.dc.sel .dn{color:#fff}
 .dd{font-size:17px;font-weight:700;color:var(--txt);margin:3px 0 2px}
 .dc.sel .dd{color:#fff}
 .db{font-size:9px;color:var(--dim)}
-.dc.wknd .db{color:#c0c0dd}.dc.sel .db{color:#ffffff88}
-.dlabel{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.dc.wknd .db{color:#c0c0dd}.dc.sel .db{color:#ffffff88}.dc.hasstuff .db{color:var(--gold)}
+
+/* day label */
+.dlabel{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .dname{font-size:14px;font-weight:700}
-.wlbl{margin-left:8px;font-size:10px;color:#6666aa;background:#ededf8;border:1px solid #d0d0ee;border-radius:10px;padding:2px 8px}
-.tlbl{margin-left:8px;font-size:10px;color:#2e7d32;background:#e8f5e9;border:1px solid #c8e6c9;border-radius:10px;padding:2px 8px}
-.trow{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--bdr)}
+.wlbl{margin-left:6px;font-size:10px;color:#6666aa;background:#ededf8;border:1px solid #d0d0ee;border-radius:10px;padding:2px 8px}
+.tlbl{margin-left:6px;font-size:10px;color:#2e7d32;background:#e8f5e9;border:1px solid #c8e6c9;border-radius:10px;padding:2px 8px}
+
+/* schedule items */
+.srow{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--bdr)}
+.srow:last-child{border-bottom:none}
+.stime{font-size:11px;color:var(--muted);font-weight:600;width:60px;flex-shrink:0;padding-top:2px}
+.sicon{font-size:16px;flex-shrink:0}
+.sinfo{flex:1;min-width:0}
+.stitle{font-size:13px;font-weight:600;color:var(--txt)}
+.stitle.done{color:var(--dim);text-decoration:line-through}
+.ssub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* checklist */
+.trow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bdr)}
 .trow:last-child{border-bottom:none}
-.tick{width:24px;height:24px;border-radius:6px;flex-shrink:0;background:transparent;border:2px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;cursor:pointer}
+.tick{width:22px;height:22px;border-radius:5px;flex-shrink:0;background:transparent;border:2px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;cursor:pointer}
 .tick.on{background:var(--gold);border-color:var(--gold)}
-.tinfo{flex:1;min-width:0}
-.ttl{font-size:13px;font-weight:600;color:var(--txt);word-break:break-word}
-.ttl.done{color:var(--dim);text-decoration:line-through}
-.tsub{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* quick add panel */
+.qabox{background:var(--card);border:1px solid #e8d8b0;border-radius:14px;padding:14px;margin-bottom:10px}
+.qa-type-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.qa-type-btn{padding:7px 12px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid var(--bdr2);background:var(--card2);color:var(--muted);cursor:pointer;transition:all .15s}
+.qa-type-btn.on{background:var(--gold);border-color:var(--gold);color:#fff}
+
+/* tags */
 .tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;margin-left:4px;white-space:nowrap}
 .chip{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
+
+/* progress */
 .progwrap{height:4px;background:var(--bdr);border-radius:2px;margin-top:4px}
 .progbar{height:4px;background:var(--gold);border-radius:2px}
+
+/* pipeline */
 .stlist{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .stbtn{background:var(--card2);border:1px solid var(--bdr);border-radius:7px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--muted);min-height:36px}
 .stbtn.on{background:#fff8e0;border-color:var(--gold);color:var(--gold)}
 .stsbadge{border-radius:20px;padding:5px 11px;font-size:10px;font-weight:700;border:1px solid;white-space:nowrap;cursor:pointer}
-.empty{text-align:center;padding:28px 0;color:var(--dim);font-size:13px}
+
+/* today screen */
+.today-item{display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:10px;background:var(--card);border:1px solid var(--bdr);margin-bottom:6px;cursor:pointer}
+.today-icon{font-size:18px;flex-shrink:0}
+.today-title{font-size:13px;font-weight:600}
+.today-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* misc */
+.empty{text-align:center;padding:24px 0;color:var(--dim);font-size:13px}
 .row{display:flex;align-items:center;gap:8px}
 .rowsb{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .mt8{margin-top:8px}.mt10{margin-top:10px}.mt12{margin-top:12px}
 .mb8{margin-bottom:8px}.mb10{margin-bottom:10px}.mb14{margin-bottom:14px}
-/* alert strip */
-.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:10px;margin-bottom:8px}
-.alert-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
-/* today screen */
-.today-greeting{background:linear-gradient(135deg,#fffaf0,#fff8e8);border:1px solid #e8d8b0;border-radius:14px;padding:18px;margin-bottom:14px}
-.today-block{margin-bottom:14px}
-.today-item{display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:10px;background:var(--card);border:1px solid var(--bdr);margin-bottom:6px}
-.today-icon{font-size:18px;flex-shrink:0}
-.today-info{flex:1}
-.today-title{font-size:13px;font-weight:600}
-.today-sub{font-size:11px;color:var(--muted);margin-top:2px}
-/* meeting status */
-.ms-scheduled{color:#1565c0}.ms-done{color:#2e7d32}.ms-cancelled{color:#c62828}
+
 /* toast */
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;white-space:nowrap}
 #toast.show{opacity:1}
+
 /* alert panel */
 #alert-panel{display:none;position:fixed;top:56px;right:10px;width:320px;max-width:95vw;background:var(--card);border:1px solid var(--bdr);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.15);z-index:9998;padding:14px;max-height:80vh;overflow-y:auto}
 #alert-panel.show{display:block}
+
 @media(max-width:600px){
-  #hdr{padding:11px 13px}.logo{font-size:14px}
-  #body{padding:12px 10px}.tab{font-size:10px;padding:10px 7px}
+  #hdr{padding:10px 13px}.logo{font-size:14px}
+  #body{padding:10px 10px}.tab{font-size:10px;padding:10px 7px}
   .box{padding:12px 10px}.ptitle{font-size:15px}
-  .g2{grid-template-columns:1fr}.g3{gap:6px}.g4{grid-template-columns:1fr 1fr}
-  .stat{padding:10px 8px}.stat .sn{font-size:18px}.r2{display:none}
+  .g2{grid-template-columns:1fr}.g3{gap:6px}
+  .stat{padding:10px 8px}.stat .sn{font-size:18px}
   #alert-panel{width:calc(100vw - 20px);right:10px}
 }
 </style>
 </head>
 <body>
 <div id="hdr">
-  <div>
-    <div class="logo">RealtorVera 🏡</div>
-    <div class="sub">Vera Adegoke · Columbus, OH</div>
-  </div>
+  <div><div class="logo">RealtorVera 🏡</div><div class="sub">Vera Adegoke · Columbus, OH</div></div>
   <button id="alert-bell" onclick="toggleAlertPanel()">🔔<span id="alert-count" style="display:none">0</span></button>
 </div>
 <div id="tabs">
-  <button class="tab on" onclick="go('today',this)">🏠 Today</button>
-  <button class="tab" onclick="go('planner',this)">📅 Planner</button>
-  <button class="tab" onclick="go('checklist',this)">✅ Checklist</button>
-  <button class="tab" onclick="go('clients',this)">👥 Clients</button>
-  <button class="tab" onclick="go('meetings',this)">🤝 Meetings</button>
-  <button class="tab" onclick="go('trainings',this)">🎓 Trainings</button>
-  <button class="tab" onclick="go('content',this)">📱 Content</button>
-  <button class="tab" onclick="go('pipeline',this)">📊 Pipeline</button>
-  <button class="tab" onclick="go('builds',this)">🏗️ Builds</button>
-  <button class="tab" onclick="go('lenders',this)">🏦 Lenders</button>
-  <button class="tab" onclick="go('profit',this)">💰 Profit</button>
-  <button class="tab" onclick="go('guide',this)">📖 Guide</button>
+  <button class="tab on"  onclick="go('today',this)">🏠 Today</button>
+  <button class="tab"     onclick="go('planner',this)">📅 Planner</button>
+  <button class="tab"     onclick="go('clients',this)">👥 Clients</button>
+  <button class="tab"     onclick="go('pipeline',this)">📊 Pipeline</button>
+  <button class="tab"     onclick="go('content',this)">📱 Content</button>
+  <button class="tab"     onclick="go('builds',this)">🏗️ Builds</button>
+  <button class="tab"     onclick="go('lenders',this)">🏦 Lenders</button>
+  <button class="tab"     onclick="go('profit',this)">💰 Profit</button>
+  <button class="tab"     onclick="go('guide',this)">📖 Guide</button>
 </div>
 <div id="body">
-  <div id="ptoday" class="panel on"></div>
+  <div id="ptoday"   class="panel on"></div>
   <div id="pplanner" class="panel"></div>
-  <div id="pchecklist" class="panel"></div>
   <div id="pclients" class="panel"></div>
-  <div id="pmeetings" class="panel"></div>
-  <div id="ptrainings" class="panel"></div>
+  <div id="ppipeline"class="panel"></div>
   <div id="pcontent" class="panel"></div>
-  <div id="ppipeline" class="panel"></div>
-  <div id="pbuilds" class="panel"></div>
+  <div id="pbuilds"  class="panel"></div>
   <div id="plenders" class="panel"></div>
-  <div id="pprofit" class="panel"></div>
-  <div id="pguide" class="panel"></div>
+  <div id="pprofit"  class="panel"></div>
+  <div id="pguide"   class="panel"></div>
 </div>
 <div id="alert-panel"></div>
 <div id="toast"></div>
+
 <script>
 var DN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 var MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 var TODAY=new Date();
 var ACTIVE="today";
-var PANEL_IDS={today:"ptoday",planner:"pplanner",checklist:"pchecklist",clients:"pclients",meetings:"pmeetings",trainings:"ptrainings",content:"pcontent",pipeline:"ppipeline",builds:"pbuilds",lenders:"plenders",profit:"pprofit",guide:"pguide"};
+var PANEL_IDS={today:"ptoday",planner:"pplanner",clients:"pclients",pipeline:"ppipeline",content:"pcontent",builds:"pbuilds",lenders:"plenders",profit:"pprofit",guide:"pguide"};
 
 function sow(d){var r=new Date(d);r.setDate(r.getDate()-r.getDay());r.setHours(0,0,0,0);return r;}
 function addD(d,n){var r=new Date(d);r.setDate(r.getDate()+n);return r;}
@@ -173,6 +204,18 @@ function fmt(n){return "$"+Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,
 function fmtK(n){return n>=1000?"$"+(n/1000).toFixed(1)+"k":fmt(n);}
 function todayStr(){return TODAY.toISOString().split("T")[0];}
 function daysBetween(d1,d2){return Math.floor((new Date(d1)-new Date(d2))/(1000*60*60*24));}
+function parseTime(s){
+  if(!s)return"";
+  s=s.trim().toLowerCase();
+  var m=s.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/);
+  if(!m)return s;
+  var h=parseInt(m[1]),mn=m[2]||"00",ap=m[3];
+  if(ap==="pm"&&h<12)h+=12;
+  if(ap==="am"&&h===12)h=0;
+  var suffix=h<12?"AM":"PM";
+  var h12=h%12||12;
+  return h12+":"+mn+" "+suffix;
+}
 
 function toast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2800);}
 
@@ -180,9 +223,7 @@ function go(id,btn){
   document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
   document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("on");});
   document.getElementById(PANEL_IDS[id]).classList.add("on");
-  btn.classList.add("on");
-  ACTIVE=id;
-  // close alert panel
+  btn.classList.add("on");ACTIVE=id;
   document.getElementById("alert-panel").classList.remove("show");
 }
 function goTab(id){
@@ -199,212 +240,24 @@ var TAGS={
   training:{l:"Training",bg:"#fffbe6",c:"#8a6000"},
   meeting:{l:"Meeting",bg:"#ffe8ec",c:"#a81830"}
 };
-function tagBadge(t){var m=TAGS[t]||{l:t,bg:"#eee",c:"#666"};return '<span class="tag" style="background:'+m.bg+';color:'+m.c+'">'+m.l+'</span>';}
-function chip(color,lbl){return '<span class="chip" style="background:'+color+'22;color:'+color+'">'+esc(lbl)+'</span>';}
+function tagBadge(t){var m=TAGS[t]||{l:t,bg:"#eee",c:"#666"};return'<span class="tag" style="background:'+m.bg+';color:'+m.c+'">'+m.l+'</span>';}
+function chip(color,lbl){return'<span class="chip" style="background:'+color+'22;color:'+color+'">'+esc(lbl)+'</span>';}
+function progH(done,tot){var p=tot?Math.round(done/tot*100):0;return'<div style="text-align:right"><div style="font-size:12px;color:var(--gold);font-weight:700">'+done+'/'+tot+'</div><div class="progwrap" style="width:70px;margin-left:auto"><div class="progbar" style="width:'+p+'%"></div></div></div>';}
 
-/* ── shared week UI ── */
-function navH(id,ws){return '<div class="wknav"><button class="arw" onclick="'+id+'P()">&#8249;</button><div class="rng"><div class="r1">'+fr(ws)+'</div><div class="r2"><kbd>&#8592;</kbd> / <kbd>&#8594;</kbd> navigate weeks</div></div><button class="arw" onclick="'+id+'N()">&#8250;</button></div>';}
-function gridH(id,ws,sel,bfn){
-  var s='<div class="dgrid">';
-  for(var i=0;i<7;i++){var d=addD(ws,i),k=fk(d),cls="dc";if(k===sel)cls+=" sel";else if(isToday(d))cls+=" tod";else if(isWknd(d))cls+=" wknd";var b=bfn?bfn(k):"";s+='<div class="'+cls+'" onclick="'+id+'S(\''+k+'\')"><div class="dn">'+DN[d.getDay()]+'</div><div class="dd">'+d.getDate()+'</div><div class="db">'+(b||".")+'</div></div>';}
-  return s+"</div>";
-}
-function labelH(sd,right){right=right||"";var x=fl(sd)+(isWknd(sd)?'<span class="wlbl">Weekend</span>':"")+(isToday(sd)?'<span class="tlbl">Today</span>':"");return '<div class="dlabel"><div class="dname">'+x+'</div>'+right+'</div>';}
-function getSel(ws,sel){for(var i=0;i<7;i++){var d=addD(ws,i);if(fk(d)===sel)return d;}return TODAY;}
-function progH(done,tot){var p=tot?Math.round(done/tot*100):0;return '<div style="text-align:right"><div style="font-size:12px;color:var(--gold);font-weight:700">'+done+'/'+tot+'</div><div class="progwrap" style="width:70px;margin-left:auto"><div class="progbar" style="width:'+p+'%"></div></div></div>';}
-
-/* ===================== ALERTS ENGINE ===================== */
-var FOLLOWUP_DAYS={high:3,medium:7,low:14};
-
-function getAlerts(){
-  var alerts=[];
-  var ts=todayStr();
-
-  // client follow-up overdue
-  CLI.data.forEach(function(c){
-    var days=FOLLOWUP_DAYS[c.priority]||7;
-    var notes=CLI.notes[c.id]||[];
-    var lastContact=c.lastContact||c.addedDate||null;
-    if(notes.length>0){
-      var sorted=notes.slice().sort(function(a,b){return new Date(b.date||0)-new Date(a.date||0);});
-      if(sorted[0].date)lastContact=sorted[0].date;
-    }
-    if(lastContact){
-      var diff=daysBetween(ts,lastContact);
-      if(diff>=days){alerts.push({level:diff>=days*2?"red":"amber",icon:"👥",title:"Follow up: "+c.name,sub:"Last contact "+diff+" days ago ("+c.priority+" priority — every "+days+" days)",action:"goTab('clients')"});}
-    }
-  });
-
-  // today's meetings
-  MTG.data.forEach(function(m){
-    if(m.date===ts&&m.status==="Scheduled"){alerts.push({level:"blue",icon:"🤝",title:m.time+" · "+m.title,sub:m.type+" · "+esc(m.location||""),action:"goTab('meetings')"});}
-  });
-
-  // today's trainings
-  TRN.data.forEach(function(t){
-    if(t.date===ts&&!t.completed){alerts.push({level:"blue",icon:"🎓",title:t.time+" · "+t.title,sub:esc(t.provider||""),action:"goTab('trainings')"});}
-  });
-
-  // upcoming meetings this week
-  for(var i=1;i<7;i++){
-    var d=addD(TODAY,i);var ds=d.toISOString().split("T")[0];
-    MTG.data.forEach(function(m){if(m.date===ds&&m.status==="Scheduled"){alerts.push({level:"green",icon:"📅",title:fl(d)+" · "+m.title,sub:m.type+" at "+esc(m.time),action:"goTab('meetings')"});}});
-  }
-
-  // pipeline stale (no stage change in 7 days)
-  PIP.data.forEach(function(l){
-    if(l.last&&l.last!=="Today"){
-      try{var diff=daysBetween(ts,new Date(l.last+" 2026").toISOString().split("T")[0]);if(diff>7)alerts.push({level:"amber",icon:"📊",title:"Pipeline stale: "+l.name,sub:"Stage unchanged for "+diff+" days",action:"goTab('pipeline')"});}catch(e){}
-    }
-  });
-
-  return alerts;
+/* ── ITEM TYPE ICONS ── */
+function itemIcon(type){
+  if(type==="meeting")return"🤝";
+  if(type==="training")return"🎓";
+  if(type==="task")return"📌";
+  return"📌";
 }
 
-function updateAlertBell(){
-  var alerts=getAlerts();
-  var bell=document.getElementById("alert-bell");
-  var count=document.getElementById("alert-count");
-  if(alerts.length>0){count.textContent=alerts.length>9?"9+":alerts.length;count.style.display="flex";}
-  else{count.style.display="none";}
-}
-
-function toggleAlertPanel(){
-  var p=document.getElementById("alert-panel");
-  p.classList.toggle("show");
-  if(p.classList.contains("show"))renderAlertPanel();
-}
-
-function renderAlertPanel(){
-  var alerts=getAlerts();
-  var colors={red:"#ffebee",amber:"#fffde7",blue:"#e3f2fd",green:"#e8f5e9"};
-  var borderColors={red:"#ef9a9a",amber:"#ffe082",blue:"#90caf9",green:"#a5d6a7"};
-  var html='<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px">🔔 Alerts & Reminders</div>';
-  if(!alerts.length){html+='<div class="empty" style="padding:16px 0">All clear! No alerts right now ✅</div>';}
-  else{html+=alerts.map(function(a){return '<div onclick="'+a.action+';toggleAlertPanel()" style="display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:10px;background:'+colors[a.level]+';border:1px solid '+borderColors[a.level]+';margin-bottom:6px;cursor:pointer"><div style="font-size:18px;flex-shrink:0">'+a.icon+'</div><div><div style="font-size:13px;font-weight:600">'+a.title+'</div><div style="font-size:11px;color:var(--muted);margin-top:2px">'+a.sub+'</div></div></div>';}).join("");}
-  document.getElementById("alert-panel").innerHTML=html;
-}
-
-/* ===================== TODAY SCREEN ===================== */
-function getGreeting(){var h=TODAY.getHours();if(h<12)return "Good Morning";if(h<17)return "Good Afternoon";return "Good Evening";}
-function TODAYR(){
-  var ts=todayStr();
-  var alerts=getAlerts();
-  var urgent=alerts.filter(function(a){return a.level==="red";});
-  var warnings=alerts.filter(function(a){return a.level==="amber";});
-  var info=alerts.filter(function(a){return a.level==="blue"||a.level==="green";});
-
-  // today's meetings
-  var todayMtgs=MTG.data.filter(function(m){return m.date===ts&&m.status==="Scheduled";});
-  // today's trainings
-  var todayTrns=TRN.data.filter(function(t){return t.date===ts&&!t.completed;});
-  // today's planner tasks
-  var todayTasks=(PL.tasks[fk(TODAY)]||[]).filter(function(t){return !t.done;});
-  // today's checklist
-  var todayCL=CL.items[fk(TODAY)]||[];
-  var clDone=todayCL.filter(function(t){return t.done;}).length;
-  // this week meetings
-  var weekMtgs=[];
-  for(var i=1;i<7;i++){var d=addD(TODAY,i);var ds=d.toISOString().split("T")[0];MTG.data.forEach(function(m){if(m.date===ds&&m.status==="Scheduled")weekMtgs.push({d:fl(d),m:m});});}
-
-  function alertBlock(items,color,border){
-    return items.map(function(a){return '<div onclick="'+a.action+'" class="today-item" style="background:'+color+';border-color:'+border+';cursor:pointer"><div class="today-icon">'+a.icon+'</div><div class="today-info"><div class="today-title">'+a.title+'</div><div class="today-sub">'+a.sub+'</div></div></div>';}).join("");
-  }
-
-  var html='<div class="today-greeting">'
-    +'<div style="font-size:18px;font-weight:700;color:#b06a00">'+getGreeting()+', Vera! ☀️</div>'
-    +'<div style="font-size:12px;color:#a08060;margin-top:3px">'+DN[TODAY.getDay()]+', '+MN[TODAY.getMonth()]+" "+TODAY.getDate()+", "+TODAY.getFullYear()+'</div>'
-    +'<div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">'
-    +'<div style="background:#fff;border:1px solid #e8d8b0;border-radius:10px;padding:8px 14px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--gold)">'+PIP.data.length+'</div><div style="font-size:10px;color:var(--muted)">Active Leads</div></div>'
-    +'<div style="background:#fff;border:1px solid #e8d8b0;border-radius:10px;padding:8px 14px;text-align:center"><div style="font-size:18px;font-weight:700;color:#c62828">'+urgent.length+'</div><div style="font-size:10px;color:var(--muted)">Urgent</div></div>'
-    +'<div style="background:#fff;border:1px solid #e8d8b0;border-radius:10px;padding:8px 14px;text-align:center"><div style="font-size:18px;font-weight:700;color:#27ae60">'+clDone+'/'+todayCL.length+'</div><div style="font-size:10px;color:var(--muted)">Checklist</div></div>'
-    +'<div style="background:#fff;border:1px solid #e8d8b0;border-radius:10px;padding:8px 14px;text-align:center"><div style="font-size:18px;font-weight:700;color:#1565c0">'+todayMtgs.length+'</div><div style="font-size:10px;color:var(--muted)">Meetings</div></div>'
-    +'</div></div>';
-
-  if(urgent.length){html+='<div class="section" style="color:#c62828">🔴 Urgent — Action Needed</div>'+alertBlock(urgent,"#fff5f5","#ef9a9a");}
-  if(warnings.length){html+='<div class="section" style="color:#e65100">🟡 Follow-Ups Overdue</div>'+alertBlock(warnings,"#fffde7","#ffe082");}
-
-  if(todayMtgs.length){
-    html+='<div class="section">🤝 Today\'s Meetings</div>';
-    todayMtgs.forEach(function(m){html+='<div class="today-item" onclick="goTab(\'meetings\')" style="cursor:pointer"><div class="today-icon">🤝</div><div class="today-info"><div class="today-title">'+esc(m.title)+'</div><div class="today-sub">'+esc(m.time)+(m.location?" · "+esc(m.location):"")+" · "+esc(m.type)+'</div></div></div>';});
-  }
-  if(todayTrns.length){
-    html+='<div class="section">🎓 Today\'s Trainings</div>';
-    todayTrns.forEach(function(t){html+='<div class="today-item" onclick="goTab(\'trainings\')" style="cursor:pointer"><div class="today-icon">🎓</div><div class="today-info"><div class="today-title">'+esc(t.title)+'</div><div class="today-sub">'+esc(t.time||"")+(t.provider?" · "+esc(t.provider):"")+'</div></div></div>';});
-  }
-  if(todayTasks.length){
-    html+='<div class="section">📅 Planner Tasks Today</div>';
-    todayTasks.slice(0,5).forEach(function(t){html+='<div class="today-item" onclick="goTab(\'planner\')" style="cursor:pointer"><div class="today-icon">📌</div><div class="today-info"><div class="today-title">'+esc(t.title)+'</div><div class="today-sub">'+esc(t.time||"")+'</div></div></div>';});
-  }
-  if(weekMtgs.length){
-    html+='<div class="section">📆 This Week\'s Meetings</div>';
-    weekMtgs.slice(0,5).forEach(function(x){html+='<div class="today-item" onclick="goTab(\'meetings\')" style="cursor:pointer"><div class="today-icon">📅</div><div class="today-info"><div class="today-title">'+esc(x.m.title)+'</div><div class="today-sub">'+x.d+" · "+esc(x.m.time)+'</div></div></div>';});
-  }
-  if(info.length){html+='<div class="section">ℹ️ Reminders</div>'+alertBlock(info,"#f0f7ff","#90caf9");}
-  if(!urgent.length&&!warnings.length&&!todayMtgs.length&&!todayTrns.length&&!todayTasks.length){html+='<div class="box green" style="text-align:center;padding:24px"><div style="font-size:28px">🌟</div><div style="font-size:15px;font-weight:700;color:#2e7d32;margin-top:8px">You\'re all caught up!</div><div style="font-size:13px;color:var(--muted);margin-top:4px">No urgent items today. Keep crushing it Vera!</div></div>';}
-
-  document.getElementById("ptoday").innerHTML=html;
-  updateAlertBell();
-}
-
-/* ===================== PLANNER ===================== */
-var PL={ws:sow(TODAY),sel:fk(TODAY),open:false,f:{time:"",title:"",desc:"",tag:"client"},tasks:{}};
-(function(){
-  var ws=sow(TODAY);function dk(n){return fk(addD(ws,n));}
-  PL.tasks[dk(0)]=[{id:"su1",time:"Flexible",title:"Week Review & Planning",desc:"Review wins & prep next week",tag:"client",done:false}];
-  PL.tasks[dk(1)]=[
-    {id:"m1",time:"10:00 AM",title:"Text Michael (Dr. Horton)",desc:"Schedule Wednesday consultation",tag:"client",done:false},
-    {id:"m2",time:"10:15 AM",title:"Send Buyer Guide - Suzel",desc:"Email buyer agreement guide",tag:"client",done:false},
-    {id:"m3",time:"10:30 AM",title:"Send Buyer Guide - Zahara",desc:"Send Si Zahara buyer guide",tag:"client",done:false},
-    {id:"m4",time:"10:45 AM",title:"Speak with Pastor Lanre",desc:"Networking, referrals & community",tag:"network",done:false},
-    {id:"m5",time:"11:15 AM",title:"Resume Property Search - Lucy",desc:"Continue MLS search for Lucy",tag:"search",done:false},
-    {id:"m6",time:"11:45 AM",title:"Set Up Land Search - Zion",desc:"MLS land search criteria & alerts",tag:"search",done:false},
-    {id:"m7",time:"12:00-5:00 PM",title:"Social Media & Content Block",desc:"All platforms, website, scheduling",tag:"content",done:false}
-  ];
-  PL.tasks[dk(2)]=[{id:"t1",time:"9:00 AM-1:00 PM",title:"Builder Training - Maronda Homes",desc:"Canal Winchester inventory & incentives",tag:"training",done:false}];
-  PL.tasks[dk(3)]=[{id:"w1",time:"10:00 AM",title:"Consultation - Michael (Dr. Horton)",desc:"New construction & partnership",tag:"meeting",done:false}];
-  PL.tasks[dk(4)]=[{id:"th1",time:"9:00 AM",title:"House Search for Suzel",desc:"MLS search, prepare shortlist",tag:"search",done:false},{id:"th2",time:"10:30 AM",title:"Visit Rockford Homes",desc:"New build photos, Reels & content",tag:"content",done:false},{id:"th3",time:"1:00 PM",title:"Fisher's Homes - Plain City",desc:"Two new build community visits",tag:"content",done:false}];
-  PL.tasks[dk(5)]=[{id:"f1",time:"9:00 AM-5:00 PM",title:"Full Content Creation Day",desc:"Edit visits, Reels, carousels, schedule",tag:"content",done:false}];
-  PL.tasks[dk(6)]=[{id:"sa1",time:"10:00 AM",title:"Weekend Open Houses",desc:"Scout listings & attend open houses",tag:"search",done:false}];
-})();
-function PLR(){
-  var days=[],i;for(i=0;i<7;i++)days.push(addD(PL.ws,i));
-  var all=[];days.forEach(function(d){var t=PL.tasks[fk(d)];if(t)all=all.concat(t);});
-  var dt=PL.tasks[PL.sel]||[];var sd=getSel(PL.ws,PL.sel);
-  var rows=dt.length?dt.map(function(t){
-    var addChk='<button class="sbtn blu sml" onclick="PLtoChecklist(\''+esc(t.title)+'\',\''+esc(t.desc)+'\')" >+ CL</button>';
-    return '<div class="trow"><div class="tick'+(t.done?" on":"")+'" onclick="PLT(\''+t.id+'\')">'+(t.done?"&#10003;":"")+'</div><div class="tinfo"><div class="ttl'+(t.done?" done":"")+'">'+esc(t.title)+tagBadge(t.tag)+'</div>'+((t.time||t.desc)?'<div class="tsub">'+esc(t.time)+(t.time&&t.desc?" · ":"")+esc(t.desc)+'</div>':"")+'</div><div class="row" style="gap:4px">'+addChk+'<button class="xbtn" onclick="PLX(\''+t.id+'\')">&#10005;</button></div></div>';
-  }).join(""):'<div class="empty">No tasks yet</div>';
-  var tagOpts=Object.keys(TAGS).map(function(k){return '<option value="'+k+'"'+(PL.f.tag===k?" selected":"")+'>'+TAGS[k].l+'</option>';}).join("");
-  var form=PL.open?'<div class="box hi mb10"><div class="g2"><input class="inp" placeholder="Time e.g. 10:00 AM" value="'+esc(PL.f.time)+'" oninput="PL.f.time=this.value"/><select class="inp" onchange="PL.f.tag=this.value">'+tagOpts+'</select></div><input class="inp mb8" placeholder="Task title *" value="'+esc(PL.f.title)+'" oninput="PL.f.title=this.value"/><input class="inp" placeholder="Description (optional)" value="'+esc(PL.f.desc)+'" oninput="PL.f.desc=this.value"/><div class="row mt10"><button class="gbtn" onclick="PLA()">Add Task</button><button class="sbtn" onclick="PLO()">Cancel</button></div></div>':"";
-  document.getElementById("pplanner").innerHTML='<div class="rowsb mb10"><div class="ptitle">📅 Weekly Planner</div>'+progH(all.filter(function(t){return t.done;}).length,all.length)+'</div>'+navH("PL",PL.ws)+gridH("PL",PL.ws,PL.sel,function(k){var t=PL.tasks[k]||[];return t.length?(t.filter(function(x){return x.done;}).length+"/"+t.length):null;})+labelH(sd,'<button class="gbtn" onclick="PLO()">+ Task</button>')+form+'<div class="box">'+rows+'</div>';
-  save();
-}
-function PLtoChecklist(title,desc){var k=fk(TODAY);if(!CL.items[k])CL.items[k]=[];CL.items[k].push({id:"p"+Date.now(),task:title+(desc?" - "+desc:""),done:false});save();toast("Added to today's checklist ✅");}
-function PLP(){PL.ws=addD(PL.ws,-7);var p=PL.sel.split("-");var d=new Date();d.setFullYear(+p[0]);d.setMonth(+p[1]);d.setDate(+p[2]);PL.sel=fk(addD(d,-7));PLR();}
-function PLN(){PL.ws=addD(PL.ws,7);var p=PL.sel.split("-");var d=new Date();d.setFullYear(+p[0]);d.setMonth(+p[1]);d.setDate(+p[2]);PL.sel=fk(addD(d,7));PLR();}
-function PLS(k){PL.sel=k;PLR();}
-function PLT(id){var t=(PL.tasks[PL.sel]||[]).find(function(x){return x.id===id;});if(t)t.done=!t.done;PLR();}
-function PLX(id){if(PL.tasks[PL.sel])PL.tasks[PL.sel]=PL.tasks[PL.sel].filter(function(x){return x.id!==id;});PLR();}
-function PLO(){PL.open=!PL.open;PLR();}
-function PLA(){var el=document.querySelector("#pplanner input[placeholder='Task title *']");var title=el?el.value.trim():PL.f.title.trim();if(!title)return;if(!PL.tasks[PL.sel])PL.tasks[PL.sel]=[];PL.tasks[PL.sel].push({id:"u"+Date.now(),time:PL.f.time,title:title,desc:PL.f.desc,tag:PL.f.tag,done:false});PL.f={time:"",title:"",desc:"",tag:"client"};PL.open=false;PLR();}
-
-/* ===================== CHECKLIST ===================== */
-var CL={ws:sow(TODAY),sel:fk(TODAY),items:{}};
-function CLR(){
-  var di=CL.items[CL.sel]||[];var done=di.filter(function(t){return t.done;}).length;var sd=getSel(CL.ws,CL.sel);
-  var rows=di.length?di.map(function(t){return '<div class="trow"><div class="tick'+(t.done?" on":"")+'" onclick="CLT(\''+t.id+'\')">'+(t.done?"&#10003;":"")+'</div><div class="tinfo"><div class="ttl'+(t.done?" done":"")+'">'+esc(t.task)+'</div></div><button class="xbtn" onclick="CLX(\''+t.id+'\')">&#10005;</button></div>';}).join(""):'<div class="empty">Add tasks here or push from Planner</div>';
-  document.getElementById("pchecklist").innerHTML='<div class="rowsb mb10"><div class="ptitle">✅ Daily Checklist</div>'+progH(done,di.length)+'</div>'+navH("CL",CL.ws)+gridH("CL",CL.ws,CL.sel,function(k){var di=CL.items[k]||[];return di.length?(di.filter(function(t){return t.done;}).length+"/"+di.length):null;})+labelH(sd)+'<div class="box">'+rows+'<div class="row mt12"><input class="inp" id="cl-inp" placeholder="Add a task..." style="flex:1" onkeydown="if(event.key===\'Enter\')CLA()"/><button class="gbtn" onclick="CLA()">Add</button></div></div>';
-  save();
-}
-function CLP(){CL.ws=addD(CL.ws,-7);CL.sel=fk(CL.ws);CLR();}
-function CLN(){CL.ws=addD(CL.ws,7);CL.sel=fk(CL.ws);CLR();}
-function CLS(k){CL.sel=k;CLR();}
-function CLT(id){var t=(CL.items[CL.sel]||[]).find(function(x){return x.id===id;});if(t)t.done=!t.done;CLR();}
-function CLX(id){if(CL.items[CL.sel])CL.items[CL.sel]=CL.items[CL.sel].filter(function(x){return x.id!==id;});CLR();}
-function CLA(){var el=document.getElementById("cl-inp");var v=el?el.value.trim():"";if(!v)return;if(!CL.items[CL.sel])CL.items[CL.sel]=[];CL.items[CL.sel].push({id:"c"+Date.now(),task:v,done:false});CLR();}
-
-/* ===================== CLIENTS ===================== */
+/* ===================== DATA STORES ===================== */
+// All planner items: {id, type:"meeting"|"training"|"task", date, time, title, desc, tag, done, meetingType, linkedTo}
+var ITEMS=[];
+// Checklist items per day: {date: [{id,task,done}]}
+var CHECKLIST={};
+// Clients
 var PRIC={high:"#c0392b",medium:"#d4820a",low:"#27ae60"};
 var CLI={open:false,editing:null,ef:{},nc:{name:"",type:"Buyer",status:"Active",priority:"medium",note:""},notes:{},expanded:{},newNote:{},
   data:[
@@ -415,126 +268,16 @@ var CLI={open:false,editing:null,ef:{},nc:{name:"",type:"Buyer",status:"Active",
     {id:5,name:"Michael (Dr. Horton)",type:"Builder",status:"Meeting Wed",priority:"high",note:"Consultation Wednesday.",addedDate:"2026-04-25"},
     {id:6,name:"Pastor Lanre",type:"Network",status:"Follow Up",priority:"low",note:"Speak Monday.",addedDate:"2026-04-10"}
 ]};
-function clientInPipeline(name){return PIP.data.some(function(l){return l.name===name;});}
-function addClientToPipeline(id){var c=CLI.data.find(function(x){return x.id===id;});if(!c)return;if(clientInPipeline(c.name)){toast(c.name+" already in Pipeline!");return;}PIP.data.push({id:Date.now(),name:c.name,source:"Client",value:"TBD",next:"Initial consultation",stage:"Consultation",last:"Today"});save();toast(c.name+" added to Pipeline 📊");CLIR();}
-function CLIToggleNotes(id){CLI.expanded[id]=!CLI.expanded[id];if(!CLI.newNote[id])CLI.newNote[id]={text:"",date:"",showDate:false};CLIR();}
-function CLIAddNote(id){var el=document.getElementById("cli-note-text-"+id);var del=document.getElementById("cli-note-date-"+id);var nn=CLI.newNote[id]||{text:"",date:"",showDate:false};if(el)nn.text=el.value;if(del)nn.date=del.value;if(!nn.text.trim())return;if(!CLI.notes[id])CLI.notes[id]=[];CLI.notes[id].unshift({id:"n"+Date.now(),text:nn.text,date:nn.date});CLI.newNote[id]={text:"",date:"",showDate:false};// update lastContact
-var c=CLI.data.find(function(x){return x.id===id;});if(c&&nn.date)c.lastContact=nn.date;else if(c)c.lastContact=todayStr();save();CLIR();}
-function CLIDeleteNote(cid,nid){if(CLI.notes[cid])CLI.notes[cid]=CLI.notes[cid].filter(function(n){return n.id!==nid;});save();CLIR();}
-function CLIToggleDate(id){if(!CLI.newNote[id])CLI.newNote[id]={text:"",date:"",showDate:false};CLI.newNote[id].showDate=!CLI.newNote[id].showDate;CLIR();}
-function CLIR(){
-  var cards=CLI.data.map(function(c){
-    if(CLI.editing===c.id)return '<div class="box mb10"><div class="g2"><input class="inp" value="'+esc(CLI.ef.name!==undefined?CLI.ef.name:c.name)+'" oninput="CLI.ef.name=this.value" placeholder="Name"/><input class="inp" value="'+esc(CLI.ef.status!==undefined?CLI.ef.status:c.status)+'" oninput="CLI.ef.status=this.value" placeholder="Status"/></div><textarea class="inp mb8" rows="2" oninput="CLI.ef.note=this.value">'+esc(CLI.ef.note!==undefined?CLI.ef.note:c.note)+'</textarea><div class="row"><button class="gbtn" onclick="CLIS('+c.id+')">Save</button><button class="sbtn" onclick="CLIC()">Cancel</button></div></div>';
-    var inPip=clientInPipeline(c.name);
-    var pipBtn=inPip?'<button class="sbtn grn sml" style="cursor:default">✓ Pipeline</button>':'<button class="sbtn sml" onclick="addClientToPipeline('+c.id+')" style="background:#fff8e0;border-color:var(--gold);color:var(--gold)">+ Pipeline</button>';
-    var notesArr=CLI.notes[c.id]||[];var expanded=CLI.expanded[c.id];var nn=CLI.newNote[c.id]||{};var noteCount=notesArr.length;
-    // follow-up status
-    var days=FOLLOWUP_DAYS[c.priority]||7;var lastC=c.lastContact||c.addedDate||null;var overdue=false;
-    if(lastC){var diff=daysBetween(todayStr(),lastC);overdue=diff>=days;}
-    var overdueChip=overdue?'<span class="chip" style="background:#ffebee;color:#c62828;font-size:9px">⚠️ Follow-up due</span>':"";
-    var notesSection="";
-    if(expanded){
-      var noteLines=notesArr.length?notesArr.map(function(n){return '<div style="display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--bdr)"><div style="flex:1">'+(n.date?'<div style="font-size:10px;color:var(--gold);font-weight:600;margin-bottom:2px">📅 '+esc(n.date)+'</div>':"")+'<div style="font-size:13px;white-space:pre-wrap;line-height:1.6">'+esc(n.text)+'</div></div><button class="xbtn" onclick="CLIDeleteNote('+c.id+',\''+n.id+'\')">&#10005;</button></div>';}).join(""):'<div style="font-size:12px;color:var(--dim);padding:8px 0">No notes yet</div>';
-      notesSection='<div style="margin-top:10px;background:var(--card2);border-radius:10px;padding:12px"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Client Notes</div>'+noteLines+'<textarea id="cli-note-text-'+c.id+'" class="inp mt8" rows="3" placeholder="Type your note here...">'+esc(nn.text||"")+'</textarea>'+(nn.showDate?'<input id="cli-note-date-'+c.id+'" class="inp mt8" placeholder="Date e.g. May 11, 2026" value="'+esc(nn.date||"")+'"/>':"")+'<div class="row mt8"><button class="gbtn" onclick="CLIAddNote('+c.id+')">+ Add Note</button><button class="sbtn" onclick="CLIToggleDate('+c.id+')">'+(nn.showDate?"Hide Date":"+ Date")+'</button></div></div>';
-    }
-    return '<div class="box mb10"><div class="rowsb" style="align-items:flex-start"><div style="flex:1"><div class="row mb8" style="flex-wrap:wrap;gap:6px"><strong style="font-size:15px">'+esc(c.name)+'</strong>'+chip(PRIC[c.priority],c.priority)+overdueChip+'<span style="font-size:11px;color:var(--muted)">'+esc(c.type)+'</span></div><div style="font-size:12px;color:var(--gold);font-weight:500;margin-bottom:5px">📍 '+esc(c.status)+'</div><div style="font-size:12px;color:var(--muted);line-height:1.5">'+esc(c.note)+'</div><div class="row mt8" style="flex-wrap:wrap;gap:6px">'+pipBtn+'<button class="sbtn sml" onclick="CLIToggleNotes('+c.id+')">'+(expanded?"▲ Hide":"📝 Notes"+(noteCount?" ("+noteCount+")":""))+'</button><button class="sbtn sml" onclick="CLIE('+c.id+')">Edit</button></div>'+notesSection+'</div></div></div>';
-  }).join("");
-  var addF=CLI.open?'<div class="box hi mb10"><div class="g2"><input class="inp" placeholder="Name" oninput="CLI.nc.name=this.value" value="'+esc(CLI.nc.name)+'"/><input class="inp" placeholder="Type (Buyer/Seller/Network)" oninput="CLI.nc.type=this.value" value="'+esc(CLI.nc.type)+'"/><input class="inp" placeholder="Status" oninput="CLI.nc.status=this.value" value="'+esc(CLI.nc.status)+'"/><select class="inp" onchange="CLI.nc.priority=this.value"><option value="high"'+(CLI.nc.priority==="high"?" selected":"")+'>High Priority</option><option value="medium"'+(CLI.nc.priority==="medium"?" selected":"")+'>Medium Priority</option><option value="low"'+(CLI.nc.priority==="low"?" selected":"")+'>Low Priority</option></select></div><textarea class="inp mb8" rows="2" placeholder="Notes..." oninput="CLI.nc.note=this.value">'+esc(CLI.nc.note)+'</textarea><div class="row"><button class="gbtn" onclick="CLIA()">Save</button><button class="sbtn" onclick="CLIT()">Cancel</button></div></div>':"";
-  document.getElementById("pclients").innerHTML='<div class="rowsb mb14"><div class="ptitle">👥 Client Tracker</div><button class="gbtn" onclick="CLIT()">+ Client</button></div>'+addF+cards;
-  save();
-}
-function CLIT(){CLI.open=!CLI.open;CLIR();}
-function CLIA(){if(!CLI.nc.name.trim())return;CLI.data.push({id:Date.now(),name:CLI.nc.name,type:CLI.nc.type,status:CLI.nc.status,priority:CLI.nc.priority,note:CLI.nc.note,addedDate:todayStr()});CLI.open=false;CLI.nc={name:"",type:"Buyer",status:"Active",priority:"medium",note:""};CLIR();}
-function CLIE(id){CLI.editing=id;CLI.ef={};CLIR();}
-function CLIC(){CLI.editing=null;CLI.ef={};CLIR();}
-function CLIS(id){var c=CLI.data.find(function(x){return x.id===id;});if(c){if(CLI.ef.name!==undefined)c.name=CLI.ef.name;if(CLI.ef.status!==undefined)c.status=CLI.ef.status;if(CLI.ef.note!==undefined)c.note=CLI.ef.note;}CLI.editing=null;CLI.ef={};CLIR();}
-
-/* ===================== MEETINGS ===================== */
-var MTG_TYPES=["Client Meeting","Builder Meeting","Lender Meeting","Team Meeting","Other"];
-var MTG_STATUS=["Scheduled","Done","Cancelled"];
-var MTG={open:false,data:[
-  {id:1,title:"Consultation - Dr. Horton",type:"Builder Meeting",date:"2026-05-14",time:"10:00 AM",location:"Dr. Horton Office",notes:"Discuss new construction referral partnership",status:"Scheduled",linkedClient:""},
-  {id:2,title:"Buyer Meeting - Suzel",type:"Client Meeting",date:"2026-05-15",time:"2:00 PM",location:"Starbucks - Polaris",notes:"Review shortlist of homes",status:"Scheduled",linkedClient:"Suzel & Husband"}
-],nd:{title:"",type:"Client Meeting",date:"",time:"",location:"",notes:"",status:"Scheduled",linkedClient:""}};
-function MTGR(){
-  var ts=todayStr();
-  var upcoming=MTG.data.filter(function(m){return m.date>=ts&&m.status==="Scheduled";}).sort(function(a,b){return a.date.localeCompare(b.date);});
-  var past=MTG.data.filter(function(m){return m.date<ts||m.status!=="Scheduled";}).sort(function(a,b){return b.date.localeCompare(a.date);});
-  function mCard(m){
-    var isPast=m.status!=="Scheduled";
-    var sc=m.status==="Scheduled"?"#1565c0":m.status==="Done"?"#2e7d32":"#c62828";
-    return '<div class="box mb8" style="opacity:'+(isPast?".6":"1")+'"><div class="rowsb mb8" style="align-items:flex-start"><div><div style="font-size:14px;font-weight:700">'+esc(m.title)+'</div><div style="font-size:11px;color:var(--muted);margin-top:2px">'+esc(m.type)+' · '+esc(m.date)+' · '+esc(m.time)+(m.location?' · 📍'+esc(m.location):"")+'</div>'+(m.linkedClient?'<div style="font-size:11px;color:var(--gold);margin-top:2px">👥 '+esc(m.linkedClient)+'</div>':"")+(m.notes?'<div style="font-size:12px;color:var(--muted);margin-top:4px">'+esc(m.notes)+'</div>':"")+'</div><div class="row" style="gap:6px">'+chip(sc,m.status)+'<button class="xbtn" onclick="MTGDel('+m.id+')">&#10005;</button></div></div>'
-      +'<div class="row" style="gap:6px;flex-wrap:wrap">'+MTG_STATUS.map(function(s){return '<button class="sbtn sml'+(m.status===s?" grn":"")+'" onclick="MTGSetStatus('+m.id+',\''+s+'\')">'+s+'</button>';}).join("")+'</div></div>';
-  }
-  var clientOpts='<option value="">-- No link --</option>'+CLI.data.map(function(c){return '<option value="'+esc(c.name)+'"'+(MTG.nd.linkedClient===c.name?" selected":"")+'>'+esc(c.name)+'</option>';}).join("");
-  var typeOpts=MTG_TYPES.map(function(t){return '<option value="'+t+'"'+(MTG.nd.type===t?" selected":"")+'>'+t+'</option>';}).join("");
-  var addF=MTG.open?'<div class="box hi mb10"><input class="inp mb8" placeholder="Meeting title *" oninput="MTG.nd.title=this.value" value="'+esc(MTG.nd.title)+'"/><div class="g2"><select class="inp" onchange="MTG.nd.type=this.value">'+typeOpts+'</select><select class="inp" onchange="MTG.nd.linkedClient=this.value">'+clientOpts+'</select><input class="inp" type="date" oninput="MTG.nd.date=this.value" value="'+esc(MTG.nd.date)+'"/><input class="inp" placeholder="Time e.g. 10:00 AM" oninput="MTG.nd.time=this.value" value="'+esc(MTG.nd.time)+'"/></div><input class="inp mb8" placeholder="Location (optional)" oninput="MTG.nd.location=this.value" value="'+esc(MTG.nd.location)+'"/><textarea class="inp mb8" rows="2" placeholder="Notes (optional)" oninput="MTG.nd.notes=this.value">'+esc(MTG.nd.notes)+'</textarea><div class="row"><button class="gbtn" onclick="MTGAdd()">Save Meeting</button><button class="sbtn" onclick="MTG.open=false;MTGR()">Cancel</button></div></div>':"";
-  var upHtml=upcoming.length?upcoming.map(mCard).join(""):'<div class="empty">No upcoming meetings</div>';
-  var pastHtml=past.length?'<div class="section">Past & Cancelled</div>'+past.slice(0,5).map(mCard).join(""):"";
-  document.getElementById("pmeetings").innerHTML='<div class="rowsb mb14"><div class="ptitle">🤝 Meetings</div><button class="gbtn" onclick="MTG.open=!MTG.open;MTGR()">+ Meeting</button></div>'+addF+'<div class="section">Upcoming</div>'+upHtml+pastHtml;
-  save();
-}
-function MTGAdd(){
-  if(!MTG.nd.title.trim()||!MTG.nd.date){toast("Please enter title and date");return;}
-  MTG.data.push({id:Date.now(),title:MTG.nd.title,type:MTG.nd.type,date:MTG.nd.date,time:MTG.nd.time,location:MTG.nd.location,notes:MTG.nd.notes,status:"Scheduled",linkedClient:MTG.nd.linkedClient});
-  // auto-add to planner
-  var d=new Date(MTG.nd.date+"T12:00:00");var k=fk(d);
-  if(!PL.tasks[k])PL.tasks[k]=[];
-  PL.tasks[k].push({id:"mtg"+Date.now(),time:MTG.nd.time,title:"MEETING: "+MTG.nd.title,desc:MTG.nd.type+(MTG.nd.location?" @ "+MTG.nd.location:""),tag:"meeting",done:false});
-  MTG.nd={title:"",type:"Client Meeting",date:"",time:"",location:"",notes:"",status:"Scheduled",linkedClient:""};
-  MTG.open=false;toast("Meeting saved & added to Planner 📅");MTGR();
-}
-function MTGSetStatus(id,s){var m=MTG.data.find(function(x){return x.id===id;});if(m)m.status=s;save();MTGR();}
-function MTGDel(id){MTG.data=MTG.data.filter(function(x){return x.id!==id;});save();MTGR();}
-
-/* ===================== TRAININGS ===================== */
-var TRN={open:false,data:[
-  {id:1,title:"Builder Training - Maronda Homes",provider:"Maronda Homes",date:"2026-05-13",time:"9:00 AM",location:"Canal Winchester",notes:"Inventory, incentives & processes",completed:false,certificate:false}
-],nd:{title:"",provider:"",date:"",time:"",location:"",notes:"",completed:false,certificate:false}};
-function TRNR(){
-  var upcoming=TRN.data.filter(function(t){return !t.completed;}).sort(function(a,b){return a.date.localeCompare(b.date);});
-  var done=TRN.data.filter(function(t){return t.completed;});
-  function tCard(t){
-    return '<div class="box mb8" style="opacity:'+(t.completed?".6":"1")+'"><div class="rowsb mb8" style="align-items:flex-start"><div><div style="font-size:14px;font-weight:700">'+esc(t.title)+'</div><div style="font-size:11px;color:var(--muted);margin-top:2px">'+(t.provider?esc(t.provider)+' · ':"")+esc(t.date)+(t.time?' · '+esc(t.time):"")+(t.location?' · 📍'+esc(t.location):"")+'</div>'+(t.notes?'<div style="font-size:12px;color:var(--muted);margin-top:4px">'+esc(t.notes)+'</div>':"")+(t.certificate?'<div style="font-size:11px;color:#27ae60;margin-top:3px">🏆 Certificate earned</div>':"")+'</div><button class="xbtn" onclick="TRNDel('+t.id+')">&#10005;</button></div>'
-      +'<div class="row" style="gap:8px"><button class="sbtn'+(t.completed?" grn":"")+'" onclick="TRNToggle('+t.id+')">'+(t.completed?"✅ Completed":"Mark Complete")+'</button><button class="sbtn'+(t.certificate?" grn":"")+'" onclick="TRNCert('+t.id+')">'+(t.certificate?"🏆 Cert ✓":"+ Certificate")+'</button></div></div>';
-  }
-  var addF=TRN.open?'<div class="box hi mb10"><input class="inp mb8" placeholder="Training title *" oninput="TRN.nd.title=this.value" value="'+esc(TRN.nd.title)+'"/><div class="g2"><input class="inp" placeholder="Provider / Host" oninput="TRN.nd.provider=this.value" value="'+esc(TRN.nd.provider)+'"/><input class="inp" placeholder="Location" oninput="TRN.nd.location=this.value" value="'+esc(TRN.nd.location)+'"/><input class="inp" type="date" oninput="TRN.nd.date=this.value" value="'+esc(TRN.nd.date)+'"/><input class="inp" placeholder="Time e.g. 9:00 AM" oninput="TRN.nd.time=this.value" value="'+esc(TRN.nd.time)+'"/></div><textarea class="inp mb8" rows="2" placeholder="Notes (optional)" oninput="TRN.nd.notes=this.value">'+esc(TRN.nd.notes)+'</textarea><div class="row"><button class="gbtn" onclick="TRNAdd()">Save Training</button><button class="sbtn" onclick="TRN.open=false;TRNR()">Cancel</button></div></div>':"";
-  var upHtml=upcoming.length?upcoming.map(tCard).join(""):'<div class="empty">No upcoming trainings</div>';
-  var doneHtml=done.length?'<div class="section">Completed</div>'+done.map(tCard).join(""):"";
-  document.getElementById("ptrainings").innerHTML='<div class="rowsb mb14"><div class="ptitle">🎓 Trainings</div><button class="gbtn" onclick="TRN.open=!TRN.open;TRNR()">+ Training</button></div>'+addF+'<div class="section">Upcoming</div>'+upHtml+doneHtml;
-  save();
-}
-function TRNAdd(){if(!TRN.nd.title.trim()){toast("Please enter a title");return;}TRN.data.push({id:Date.now(),title:TRN.nd.title,provider:TRN.nd.provider,date:TRN.nd.date,time:TRN.nd.time,location:TRN.nd.location,notes:TRN.nd.notes,completed:false,certificate:false});// auto-add to planner
-if(TRN.nd.date){var d=new Date(TRN.nd.date+"T12:00:00");var k=fk(d);if(!PL.tasks[k])PL.tasks[k]=[];PL.tasks[k].push({id:"trn"+Date.now(),time:TRN.nd.time,title:"TRAINING: "+TRN.nd.title,desc:TRN.nd.provider+(TRN.nd.location?" @ "+TRN.nd.location:""),tag:"training",done:false});}
-TRN.nd={title:"",provider:"",date:"",time:"",location:"",notes:"",completed:false,certificate:false};TRN.open=false;toast("Training saved & added to Planner 📅");TRNR();}
-function TRNToggle(id){var t=TRN.data.find(function(x){return x.id===id;});if(t)t.completed=!t.completed;save();TRNR();}
-function TRNCert(id){var t=TRN.data.find(function(x){return x.id===id;});if(t)t.certificate=!t.certificate;save();TRNR();}
-function TRNDel(id){TRN.data=TRN.data.filter(function(x){return x.id!==id;});save();TRNR();}
-
-/* ===================== CONTENT ===================== */
-var STC={planned:"#7c3aed",drafted:"#c2610c",posted:"#16a34a"};
-var STL={planned:"📝 Planned",drafted:"✏️ Drafted",posted:"✅ Posted"};
-var STCY={planned:"drafted",drafted:"posted",posted:"planned"};
-var CON={ws:sow(TODAY),sel:fk(TODAY),open:false,np:{platform:"Instagram",type:"Post",topic:""},posts:[]};
-(function(){var ws=sow(TODAY);function dk(n){return fk(addD(ws,n));}
-CON.posts=[{id:1,day:dk(0),platform:"Instagram",type:"Story",topic:"Week Review",status:"planned"},{id:2,day:dk(1),platform:"Instagram",type:"Reel",topic:"Buyer Tips - Why You Need a Buyer's Agent",status:"planned"},{id:3,day:dk(1),platform:"Facebook",type:"Post",topic:"Market Update - Spring 2026 Columbus",status:"planned"},{id:4,day:dk(2),platform:"Instagram",type:"Story",topic:"Builder Training Day at Maronda Homes",status:"planned"},{id:5,day:dk(4),platform:"Instagram",type:"Reel",topic:"Rockford Homes New Build Tour",status:"planned"},{id:6,day:dk(4),platform:"TikTok",type:"Video",topic:"Fisher's Homes Walk-Through",status:"planned"},{id:7,day:dk(5),platform:"Instagram",type:"Carousel",topic:"Top 5 New Builds in Columbus",status:"planned"},{id:8,day:dk(5),platform:"LinkedIn",type:"Post",topic:"Going Full-Time as a Realtor",status:"planned"},{id:9,day:dk(6),platform:"Instagram",type:"Story",topic:"Weekend Open House Highlights",status:"planned"}];
-})();
-function CONR(){
-  var dp=CON.posts.filter(function(p){return p.day===CON.sel;});var sd=getSel(CON.ws,CON.sel);
-  var rows=dp.length?dp.map(function(p){return '<div class="trow"><div style="flex:1;min-width:0"><div class="row mb8" style="gap:6px"><strong style="font-size:13px">'+esc(p.platform)+'</strong><span style="font-size:11px;color:var(--muted)">'+esc(p.type)+'</span></div><div style="font-size:12px;color:var(--muted)">'+esc(p.topic)+'</div></div><button class="stsbadge" style="background:'+STC[p.status]+'20;color:'+STC[p.status]+';border-color:'+STC[p.status]+'40;margin:0 6px" onclick="CONC('+p.id+')">'+STL[p.status]+'</button><button class="xbtn" onclick="CONX('+p.id+')">&#10005;</button></div>';}).join(""):'<div class="empty">No posts for this day</div>';
-  var addF=CON.open?'<div class="box hi mb10"><div class="g2"><input class="inp" placeholder="Platform" oninput="CON.np.platform=this.value" value="'+esc(CON.np.platform)+'"/><input class="inp" placeholder="Type (Reel, Post...)" oninput="CON.np.type=this.value" value="'+esc(CON.np.type)+'"/></div><input class="inp mb8" placeholder="Topic / caption idea..." oninput="CON.np.topic=this.value" value="'+esc(CON.np.topic)+'"/><div class="row mt8"><button class="gbtn" onclick="CONA()">Save</button><button class="sbtn" onclick="CONO()">Cancel</button></div></div>':"";
-  document.getElementById("pcontent").innerHTML='<div class="rowsb mb10"><div class="ptitle">📱 Content Calendar</div><button class="gbtn" onclick="CONO()">+ Post</button></div>'+navH("CON",CON.ws)+gridH("CON",CON.ws,CON.sel,function(k){var n=CON.posts.filter(function(p){return p.day===k;}).length;return n?n+"p":null;})+labelH(sd)+addF+'<div class="box">'+rows+'</div>';
-  save();
-}
-function CONP(){CON.ws=addD(CON.ws,-7);CON.sel=fk(CON.ws);CONR();}
-function CONN(){CON.ws=addD(CON.ws,7);CON.sel=fk(CON.ws);CONR();}
-function CONS(k){CON.sel=k;CONR();}
-function CONC(id){var p=CON.posts.find(function(x){return x.id===id;});if(p)p.status=STCY[p.status];CONR();}
-function CONX(id){CON.posts=CON.posts.filter(function(x){return x.id!==id;});CONR();}
-function CONO(){CON.open=!CON.open;CONR();}
-function CONA(){if(!CON.np.topic.trim())return;CON.posts.push({id:Date.now(),day:CON.sel,platform:CON.np.platform,type:CON.np.type,topic:CON.np.topic,status:"planned"});CON.np={platform:"Instagram",type:"Post",topic:""};CON.open=false;CONR();}
-
-/* ===================== PIPELINE ===================== */
+// Builds
+var BLD={open:false,editing:null,ef:{},nb:{community:"",location:"",price:"",status:"",notes:""},data:[
+  {id:1,community:"Maronda Homes",location:"Canal Winchester",price:"$280k-$380k",status:"Training Tue",notes:"Builder training Tuesday.",visited:false},
+  {id:2,community:"Rockford Homes",location:"Columbus Area",price:"$300k-$450k",status:"Visit Thu",notes:"Visiting Thursday for content.",visited:false},
+  {id:3,community:"Fisher's Homes",location:"Plain City & Delaware",price:"$320k-$500k",status:"Visit Thu",notes:"Two locations Thursday.",visited:false},
+  {id:4,community:"Dr. Horton",location:"Columbus Metro",price:"$260k-$420k",status:"Meeting Wed",notes:"Meeting Michael Wednesday.",visited:false}
+]};
+// Lenders
+var LND={open:false,editing:null,ef:{},nl:{name:"",company:"",phone:"",email:"",notes:""},data:[]};
+// Pipeline
 var STAGES=["Consultation","Agreement Sent","Searching","Land Search","Under Contract","Closed"];
 var SGC={"Consultation":"#c0392b","Agreement Sent":"#d4820a","Searching":"#2980b9","Land Search":"#27ae60","Under Contract":"#8e44ad","Closed":"#666"};
 var STAGE_TASKS={"Agreement Sent":"Send buyer agreement - follow up in 48hrs","Searching":"Schedule MLS search session & send listings","Land Search":"Set up MLS land alerts & send options","Under Contract":"Schedule inspection & contact mortgage broker","Closed":"Send closing gift & request referral"};
@@ -545,23 +288,456 @@ var PIP={open:false,editing:null,ef:{},nl:{name:"",source:"",value:"",next:""},d
   {id:3,name:"Lucy",source:"Network",stage:"Searching",value:"$310,000",last:"Apr 25",next:"Resume search Monday"},
   {id:4,name:"Zion",source:"Referral",stage:"Land Search",value:"$150,000",last:"Apr 24",next:"Monitor MLS alerts"}
 ]};
+// Content
+var STC={planned:"#7c3aed",drafted:"#c2610c",posted:"#16a34a"};
+var STL={planned:"📝 Planned",drafted:"✏️ Drafted",posted:"✅ Posted"};
+var STCY={planned:"drafted",drafted:"posted",posted:"planned"};
+var CON={ws:sow(TODAY),sel:fk(TODAY),open:false,np:{platform:"Instagram",type:"Post",topic:""},posts:[]};
+(function(){var ws=sow(TODAY);function dk(n){return fk(addD(ws,n));}
+CON.posts=[
+  {id:1,day:dk(0),platform:"Instagram",type:"Story",topic:"Week Review",status:"planned"},
+  {id:2,day:dk(1),platform:"Instagram",type:"Reel",topic:"Buyer Tips - Why You Need a Buyer's Agent",status:"planned"},
+  {id:3,day:dk(1),platform:"Facebook",type:"Post",topic:"Market Update - Spring 2026 Columbus",status:"planned"},
+  {id:4,day:dk(4),platform:"Instagram",type:"Reel",topic:"Rockford Homes New Build Tour",status:"planned"},
+  {id:5,day:dk(5),platform:"Instagram",type:"Carousel",topic:"Top 5 New Builds in Columbus",status:"planned"},
+  {id:6,day:dk(6),platform:"Instagram",type:"Story",topic:"Weekend Open House Highlights",status:"planned"}
+];})();
+// Profit
+var PROFIT={inMentoring:true,dealsCompleted:0,deals:[],open:false,nd:{client:"",salePrice:"",date:""}};
+var CAP_LIMIT=6000;
+
+// seed planner items
+(function(){
+  var ws=sow(TODAY);function dk(n){return fk(addD(ws,n));}
+  var seed=[
+    {id:"s1",type:"task",date:dk(0),time:"",title:"Week Review & Planning",desc:"Review wins & prep next week",tag:"client",done:false},
+    {id:"s2",type:"meeting",date:dk(1),time:"10:00 AM",title:"Text Michael (Dr. Horton)",desc:"Schedule Wednesday consultation",tag:"meeting",meetingType:"Builder Meeting",linkedTo:"",done:false},
+    {id:"s3",type:"task",date:dk(1),time:"10:15 AM",title:"Send Buyer Guide - Suzel",desc:"Email buyer agreement guide",tag:"client",done:false},
+    {id:"s4",type:"task",date:dk(1),time:"10:45 AM",title:"Speak with Pastor Lanre",desc:"Networking, referrals & community",tag:"network",done:false},
+    {id:"s5",type:"task",date:dk(1),time:"11:15 AM",title:"Resume Property Search - Lucy",desc:"Continue MLS search for Lucy",tag:"search",done:false},
+    {id:"s6",type:"task",date:dk(1),time:"12:00 PM",title:"Social Media & Content Block",desc:"All platforms, website, scheduling",tag:"content",done:false},
+    {id:"s7",type:"training",date:dk(2),time:"9:00 AM",title:"Builder Training - Maronda Homes",desc:"Canal Winchester inventory & incentives",tag:"training",done:false},
+    {id:"s8",type:"meeting",date:dk(3),time:"10:00 AM",title:"Consultation - Michael (Dr. Horton)",desc:"New construction & partnership",tag:"meeting",meetingType:"Builder Meeting",linkedTo:"Michael (Dr. Horton)",done:false},
+    {id:"s9",type:"task",date:dk(4),time:"9:00 AM",title:"House Search for Suzel",desc:"MLS search, prepare shortlist",tag:"search",done:false},
+    {id:"s10",type:"meeting",date:dk(4),time:"10:30 AM",title:"Visit Rockford Homes",desc:"New build photos & content",tag:"meeting",meetingType:"Builder Meeting",linkedTo:"Rockford Homes",done:false},
+    {id:"s11",type:"task",date:dk(5),time:"9:00 AM",title:"Full Content Creation Day",desc:"Edit visits, Reels, carousels, schedule",tag:"content",done:false},
+    {id:"s12",type:"meeting",date:dk(6),time:"10:00 AM",title:"Weekend Open Houses",desc:"Scout listings & attend open houses",tag:"meeting",meetingType:"Other",linkedTo:"",done:false}
+  ];
+  ITEMS=seed;
+})();
+
+/* ===================== ALERTS ===================== */
+var FOLLOWUP_DAYS={high:3,medium:7,low:14};
+function getAlerts(){
+  var alerts=[];var ts=todayStr();
+  CLI.data.forEach(function(c){
+    var days=FOLLOWUP_DAYS[c.priority]||7;
+    var notes=CLI.notes[c.id]||[];
+    var lastContact=c.lastContact||c.addedDate||null;
+    if(notes.length){var s=notes.slice().sort(function(a,b){return new Date(b.date||0)-new Date(a.date||0);});if(s[0].date)lastContact=s[0].date;}
+    if(lastContact){var diff=daysBetween(ts,lastContact);if(diff>=days)alerts.push({level:diff>=days*2?"red":"amber",icon:"👥",title:"Follow up: "+c.name,sub:"Last contact "+diff+" days ago ("+c.priority+" — every "+days+" days)",action:"goTab('clients')"});}
+  });
+  var todayItems=ITEMS.filter(function(x){return x.date===ts&&!x.done;});
+  todayItems.forEach(function(x){
+    if(x.type==="meeting")alerts.push({level:"blue",icon:"🤝",title:x.time+" · "+x.title,sub:x.meetingType||"Meeting",action:"goTab('planner')"});
+    if(x.type==="training")alerts.push({level:"blue",icon:"🎓",title:x.time+" · "+x.title,sub:"Training",action:"goTab('planner')"});
+  });
+  for(var i=1;i<7;i++){
+    var d=addD(TODAY,i);var ds=d.toISOString().split("T")[0];
+    ITEMS.filter(function(x){return x.date===ds&&x.type==="meeting"&&!x.done;}).forEach(function(x){
+      alerts.push({level:"green",icon:"📅",title:fl(d)+" · "+x.title,sub:x.meetingType||"Meeting",action:"goTab('planner')"});
+    });
+  }
+  PIP.data.forEach(function(l){
+    if(l.last&&l.last!=="Today"){try{var diff=daysBetween(ts,new Date(l.last+" 2026").toISOString().split("T")[0]);if(diff>7)alerts.push({level:"amber",icon:"📊",title:"Pipeline stale: "+l.name,sub:"Stage unchanged "+diff+" days",action:"goTab('pipeline')"});}catch(e){}}
+  });
+  return alerts;
+}
+function updateAlertBell(){
+  var a=getAlerts();var cnt=document.getElementById("alert-count");
+  if(a.length){cnt.textContent=a.length>9?"9+":a.length;cnt.style.display="flex";}else{cnt.style.display="none";}
+}
+function toggleAlertPanel(){
+  var p=document.getElementById("alert-panel");p.classList.toggle("show");
+  if(p.classList.contains("show")){
+    var a=getAlerts();
+    var colors={red:"#ffebee",amber:"#fffde7",blue:"#e3f2fd",green:"#e8f5e9"};
+    var borders={red:"#ef9a9a",amber:"#ffe082",blue:"#90caf9",green:"#a5d6a7"};
+    var html='<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px">🔔 Alerts & Reminders</div>';
+    if(!a.length)html+='<div class="empty" style="padding:12px 0">All clear! ✅</div>';
+    else html+=a.map(function(x){return'<div onclick="'+x.action+';toggleAlertPanel()" style="display:flex;gap:10px;padding:10px;border-radius:10px;background:'+colors[x.level]+';border:1px solid '+borders[x.level]+';margin-bottom:6px;cursor:pointer"><div style="font-size:18px">'+x.icon+'</div><div><div style="font-size:13px;font-weight:600">'+x.title+'</div><div style="font-size:11px;color:var(--muted);margin-top:2px">'+x.sub+'</div></div></div>';}).join("");
+    document.getElementById("alert-panel").innerHTML=html;
+  }
+}
+
+/* ===================== TODAY ===================== */
+function getGreeting(){var h=TODAY.getHours();return h<12?"Good Morning":h<17?"Good Afternoon":"Good Evening";}
+function TODAYR(){
+  var ts=todayStr();
+  var alerts=getAlerts();
+  var urgent=alerts.filter(function(a){return a.level==="red";});
+  var warnings=alerts.filter(function(a){return a.level==="amber";});
+  var info=alerts.filter(function(a){return a.level==="blue"||a.level==="green";});
+  var todayItems=ITEMS.filter(function(x){return x.date===ts&&!x.done;});
+  var todayMtgs=todayItems.filter(function(x){return x.type==="meeting";});
+  var todayTrns=todayItems.filter(function(x){return x.type==="training";});
+  var todayTasks=todayItems.filter(function(x){return x.type==="task";});
+  var todayCL=CHECKLIST[ts]||[];
+  var clDone=todayCL.filter(function(t){return t.done;}).length;
+  var weekMtgs=[];
+  for(var i=1;i<7;i++){var d=addD(TODAY,i);var ds=d.toISOString().split("T")[0];ITEMS.filter(function(x){return x.date===ds&&x.type==="meeting"&&!x.done;}).forEach(function(x){weekMtgs.push({d:fl(d),x:x});});}
+
+  function aBlock(items,bg,bd){
+    return items.map(function(a){return'<div onclick="'+a.action+'" class="today-item" style="background:'+bg+';border-color:'+bd+'"><div class="today-icon">'+a.icon+'</div><div><div class="today-title">'+a.title+'</div><div class="today-sub">'+a.sub+'</div></div></div>';}).join("");
+  }
+
+  var html='<div style="background:linear-gradient(135deg,#fffaf0,#fff8e8);border:1px solid #e8d8b0;border-radius:14px;padding:16px;margin-bottom:14px">'
+    +'<div style="font-size:18px;font-weight:700;color:#b06a00">'+getGreeting()+', Vera! ☀️</div>'
+    +'<div style="font-size:12px;color:#a08060;margin-top:2px">'+DN[TODAY.getDay()]+', '+MN[TODAY.getMonth()]+" "+TODAY.getDate()+", "+TODAY.getFullYear()+'</div>'
+    +'<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">'
+    +'<div style="background:#fff;border:1px solid #e8d8b0;border-radius:10px;padding:8px 12px;text-align:center;cursor:pointer" onclick="goTab(\'pipeline\')">'
+    +'<div style="font-size:18px;font-weight:700;color:var(--gold)">'+PIP.data.length+'</div><div style="font-size:10px;color:var(--muted)">Leads</div></div>'
+    +'<div style="background:#fff;border:1px solid #e8d8b0;border-radius:10px;padding:8px 12px;text-align:center">'
+    +'<div style="font-size:18px;font-weight:700;color:#c62828">'+urgent.length+'</div><div style="font-size:10px;color:var(--muted)">Urgent</div></div>'
+    +'<div style="background:#fff;border:1px solid #e8d8b0;border-radius:10px;padding:8px 12px;text-align:center;cursor:pointer" onclick="goTab(\'planner\')">'
+    +'<div style="font-size:18px;font-weight:700;color:#27ae60">'+clDone+'/'+todayCL.length+'</div><div style="font-size:10px;color:var(--muted)">Checklist</div></div>'
+    +'<div style="background:#fff;border:1px solid #e8d8b0;border-radius:10px;padding:8px 12px;text-align:center;cursor:pointer" onclick="goTab(\'planner\')">'
+    +'<div style="font-size:18px;font-weight:700;color:#1565c0">'+todayMtgs.length+'</div><div style="font-size:10px;color:var(--muted)">Meetings</div></div>'
+    +'</div></div>';
+
+  if(urgent.length)html+='<div class="section" style="color:#c62828">🔴 Urgent</div>'+aBlock(urgent,"#fff5f5","#ef9a9a");
+  if(warnings.length)html+='<div class="section" style="color:#e65100">🟡 Follow-Ups Overdue</div>'+aBlock(warnings,"#fffde7","#ffe082");
+
+  if(todayMtgs.length){
+    html+='<div class="section">🤝 Today\'s Meetings</div>';
+    todayMtgs.forEach(function(x){html+='<div class="today-item" onclick="goTab(\'planner\')"><div class="today-icon">🤝</div><div><div class="today-title">'+esc(x.title)+'</div><div class="today-sub">'+esc(x.time)+(x.desc?" · "+esc(x.desc):"")+'</div></div></div>';});
+  }
+  if(todayTrns.length){
+    html+='<div class="section">🎓 Today\'s Trainings</div>';
+    todayTrns.forEach(function(x){html+='<div class="today-item" onclick="goTab(\'planner\')"><div class="today-icon">🎓</div><div><div class="today-title">'+esc(x.title)+'</div><div class="today-sub">'+esc(x.time)+(x.desc?" · "+esc(x.desc):"")+'</div></div></div>';});
+  }
+  if(todayTasks.length){
+    html+='<div class="section">📌 Tasks Today</div>';
+    todayTasks.slice(0,5).forEach(function(x){html+='<div class="today-item" onclick="goTab(\'planner\')"><div class="today-icon">📌</div><div><div class="today-title">'+esc(x.title)+'</div><div class="today-sub">'+esc(x.time||"")+'</div></div></div>';});
+  }
+  if(todayCL.length){
+    var pct=todayCL.length?Math.round(clDone/todayCL.length*100):0;
+    html+='<div class="section">✅ Today\'s Checklist</div>'
+      +'<div class="box" onclick="goTab(\'planner\')" style="cursor:pointer">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
+      +'<span style="font-size:13px;color:var(--muted)">'+clDone+' of '+todayCL.length+' done</span>'
+      +'<span style="font-size:12px;color:var(--gold);font-weight:700">'+pct+'%</span></div>'
+      +'<div class="progwrap"><div class="progbar" style="width:'+pct+'%"></div></div></div>';
+  }
+  if(weekMtgs.length){
+    html+='<div class="section">📆 Coming Up This Week</div>';
+    weekMtgs.slice(0,4).forEach(function(x){html+='<div class="today-item" onclick="goTab(\'planner\')"><div class="today-icon">📅</div><div><div class="today-title">'+esc(x.x.title)+'</div><div class="today-sub">'+x.d+' · '+esc(x.x.time)+'</div></div></div>';});
+  }
+  if(info.length)html+='<div class="section">ℹ️ Reminders</div>'+aBlock(info,"#f0f7ff","#90caf9");
+  if(!urgent.length&&!warnings.length&&!todayMtgs.length&&!todayTrns.length&&!todayTasks.length&&!todayCL.length){
+    html+='<div class="box green" style="text-align:center;padding:24px"><div style="font-size:28px">🌟</div><div style="font-size:15px;font-weight:700;color:#2e7d32;margin-top:8px">You\'re all caught up!</div><div style="font-size:13px;color:var(--muted);margin-top:4px">No urgent items today. Keep crushing it Vera!</div>'
+      +'<button class="gbtn" style="margin-top:14px" onclick="goTab(\'planner\')">Open Planner 📅</button></div>';
+  }
+  document.getElementById("ptoday").innerHTML=html;
+  updateAlertBell();
+}
+
+/* ===================== PLANNER (unified) ===================== */
+var PL={ws:sow(TODAY),sel:fk(TODAY),qaOpen:false,qaType:"task",qaWho:"",qaWhoType:"client",qaTime:"",qaTitle:"",qaDesc:"",qaTag:"client"};
+
+function PLgetSelDate(){for(var i=0;i<7;i++){var d=addD(PL.ws,i);if(fk(d)===PL.sel)return d;}return TODAY;}
+
+function PLdayItems(k){
+  return ITEMS.filter(function(x){return x.date===k;}).sort(function(a,b){
+    var ta=a.time||"99:99",tb=b.time||"99:99";
+    return ta.localeCompare(tb);
+  });
+}
+
+function PLhasstuff(k){return ITEMS.some(function(x){return x.date===k;})||(CHECKLIST[k]&&CHECKLIST[k].length>0);}
+
+function PLR(){
+  var days=Array.from({length:7},function(_,i){return addD(PL.ws,i);});
+  var k=PL.sel;
+  var sd=PLgetSelDate();
+  var dayItems=PLdayItems(k);
+  var cl=CHECKLIST[k]||[];
+  var clDone=cl.filter(function(t){return t.done;}).length;
+  var allItems=ITEMS.filter(function(x){return days.some(function(d){return fk(d)===x.date;});});
+  var wkDone=allItems.filter(function(x){return x.done;}).length;
+
+  // week nav
+  var nav='<div class="wknav"><button class="arw" onclick="PLP()">&#8249;</button><div class="rng">'+fr(PL.ws)+'</div><button class="arw" onclick="PLN()">&#8250;</button></div>';
+
+  // day grid
+  var grid='<div class="dgrid">';
+  days.forEach(function(d){
+    var dk=fk(d);var cls="dc";
+    if(dk===PL.sel)cls+=" sel";else if(isToday(d))cls+=" tod";else if(isWknd(d))cls+=" wknd";
+    if(PLhasstuff(dk)&&dk!==PL.sel)cls+=" hasstuff";
+    var di=PLdayItems(dk);var cli=CHECKLIST[dk]||[];
+    var total=di.length+cli.length;
+    var done=di.filter(function(x){return x.done;}).length+cli.filter(function(x){return x.done;}).length;
+    var badge=total?(done+"/"+total):"·";
+    grid+='<div class="'+cls+'" onclick="PLS(\''+dk+'\')"><div class="dn">'+DN[d.getDay()]+'</div><div class="dd">'+d.getDate()+'</div><div class="db">'+badge+'</div></div>';
+  });
+  grid+='</div>';
+
+  // day label + quick add buttons
+  var isWk=isWknd(sd),isTod=isToday(sd);
+  var dlabel='<div class="dlabel"><div class="dname">'+fl(sd)+(isWk?'<span class="wlbl">Weekend</span>':"")+(isTod?'<span class="tlbl">Today</span>':"")+'</div>'
+    +progH(wkDone,allItems.length)+'</div>';
+
+  // quick add type selector
+  var qaButtons='<div class="qa-type-row">'
+    +'<div class="qa-type-btn'+(PL.qaType==="task"?" on":"")+'" onclick="PLsetQA(\'task\')">📌 Task</div>'
+    +'<div class="qa-type-btn'+(PL.qaType==="meeting"?" on":"")+'" onclick="PLsetQA(\'meeting\')">🤝 Meeting</div>'
+    +'<div class="qa-type-btn'+(PL.qaType==="training"?" on":"")+'" onclick="PLsetQA(\'training\')">🎓 Training</div>'
+    +'<div class="qa-type-btn'+(PL.qaType==="checklist"?" on":"")+'" onclick="PLsetQA(\'checklist\')">✅ Checklist</div>'
+    +'</div>';
+
+  var qaForm="";
+  if(PL.qaOpen){
+    if(PL.qaType==="task"){
+      var tagOpts=Object.keys(TAGS).map(function(t){return'<option value="'+t+'"'+(PL.qaTag===t?" selected":"")+'>'+TAGS[t].l+'</option>';}).join("");
+      qaForm='<div class="g2">'
+        +'<input class="inp" placeholder="Task title *" oninput="PL.qaTitle=this.value" value="'+esc(PL.qaTitle)+'"/>'
+        +'<input class="inp" placeholder="Time e.g. 10am (optional)" oninput="PL.qaTime=this.value" value="'+esc(PL.qaTime)+'"/>'
+        +'</div>'
+        +'<div class="g2">'
+        +'<input class="inp" placeholder="Description (optional)" oninput="PL.qaDesc=this.value" value="'+esc(PL.qaDesc)+'"/>'
+        +'<select class="inp" onchange="PL.qaTag=this.value">'+tagOpts+'</select>'
+        +'</div>';
+    } else if(PL.qaType==="meeting"){
+      var whoTypeOpts=['client','builder','lender','other'].map(function(t){return'<option value="'+t+'"'+(PL.qaWhoType===t?" selected":"")+'>'+t.charAt(0).toUpperCase()+t.slice(1)+'</option>';}).join("");
+      // who options based on type
+      var whoOpts='<option value="">-- Select --</option>';
+      if(PL.qaWhoType==="client")whoOpts+=CLI.data.map(function(c){return'<option value="'+esc(c.name)+'"'+(PL.qaWho===c.name?" selected":"")+'>'+esc(c.name)+'</option>';}).join("");
+      else if(PL.qaWhoType==="builder")whoOpts+=BLD.data.map(function(b){return'<option value="'+esc(b.community)+'"'+(PL.qaWho===b.community?" selected":"")+'>'+esc(b.community)+'</option>';}).join("");
+      else if(PL.qaWhoType==="lender")whoOpts+=LND.data.map(function(l){return'<option value="'+esc(l.name)+'"'+(PL.qaWho===l.name?" selected":"")+'>'+esc(l.name)+' - '+esc(l.company)+'</option>';}).join("");
+      qaForm='<div class="g2">'
+        +'<select class="inp" onchange="PL.qaWhoType=this.value;PL.qaWho=\'\';PLR()">'+whoTypeOpts+'</select>'
+        +(PL.qaWhoType==="other"
+          ?'<input class="inp" placeholder="Who / Title *" oninput="PL.qaWho=this.value" value="'+esc(PL.qaWho)+'"/>'
+          :'<select class="inp" onchange="PL.qaWho=this.value">'+whoOpts+'</select>')
+        +'</div>'
+        +'<div class="g2">'
+        +'<input class="inp" placeholder="Time e.g. 10am *" oninput="PL.qaTime=this.value" value="'+esc(PL.qaTime)+'"/>'
+        +'<input class="inp" placeholder="Location (optional)" oninput="PL.qaDesc=this.value" value="'+esc(PL.qaDesc)+'"/>'
+        +'</div>';
+    } else if(PL.qaType==="training"){
+      var bldOpts='<option value="">-- Select builder or type freely --</option>'+BLD.data.map(function(b){return'<option value="'+esc(b.community)+'">'+esc(b.community)+'</option>';}).join("");
+      qaForm='<div class="g2">'
+        +'<input class="inp" placeholder="Training title *" oninput="PL.qaTitle=this.value" value="'+esc(PL.qaTitle)+'"/>'
+        +'<input class="inp" placeholder="Time e.g. 9am" oninput="PL.qaTime=this.value" value="'+esc(PL.qaTime)+'"/>'
+        +'</div>'
+        +'<div class="g2">'
+        +'<select class="inp" onchange="if(this.value)PL.qaDesc=this.value">'+bldOpts+'</select>'
+        +'<input class="inp" placeholder="Location (optional)" oninput="PL.qaDesc=this.value" value="'+esc(PL.qaDesc)+'"/>'
+        +'</div>';
+    } else if(PL.qaType==="checklist"){
+      qaForm='<input class="inp" placeholder="Task to check off today *" oninput="PL.qaTitle=this.value" value="'+esc(PL.qaTitle)+'"/>';
+    }
+  }
+
+  var qaBox='<div class="qabox">'
+    +qaButtons
+    +(PL.qaOpen
+      ?'<div style="margin-bottom:10px">'+qaForm+'</div>'
+       +'<div class="row"><button class="gbtn" onclick="PLsave()">Save</button><button class="sbtn" onclick="PL.qaOpen=false;PLR()">Cancel</button></div>'
+      :'<button class="gbtn" style="width:100%" onclick="PL.qaOpen=true;PLR()">+ Add '+PL.qaType.charAt(0).toUpperCase()+PL.qaType.slice(1)+' on '+DN[sd.getDay()]+'</button>')
+    +'</div>';
+
+  // scheduled items
+  var scheduled=dayItems.filter(function(x){return x.type!=="task"||x.time;});
+  var unscheduled=dayItems.filter(function(x){return x.type==="task"&&!x.time;});
+
+  var schedHtml=scheduled.length?scheduled.map(function(x){
+    return'<div class="srow">'
+      +'<div class="stime">'+esc(x.time||"—")+'</div>'
+      +'<div class="sicon">'+itemIcon(x.type)+'</div>'
+      +'<div class="sinfo"><div class="stitle'+(x.done?" done":"")+'">'+esc(x.title)+(x.tag?tagBadge(x.tag):"")+'</div>'
+      +(x.desc?'<div class="ssub">'+esc(x.desc)+'</div>':"")+'</div>'
+      +'<div class="row" style="gap:4px">'
+      +'<div class="tick'+(x.done?" on":"")+'" onclick="PLtoggle(\''+x.id+'\')">'+(x.done?"&#10003;":"")+'</div>'
+      +'<button class="xbtn" onclick="PLdel(\''+x.id+'\')">&#10005;</button>'
+      +'</div></div>';
+  }).join(""):'';
+
+  var unschedHtml=unscheduled.length?unscheduled.map(function(x){
+    return'<div class="srow">'
+      +'<div class="stime" style="color:var(--dim)">—</div>'
+      +'<div class="sicon">📌</div>'
+      +'<div class="sinfo"><div class="stitle'+(x.done?" done":"")+'">'+esc(x.title)+(x.tag?tagBadge(x.tag):"")+'</div>'
+      +(x.desc?'<div class="ssub">'+esc(x.desc)+'</div>':"")+'</div>'
+      +'<div class="row" style="gap:4px">'
+      +'<div class="tick'+(x.done?" on":"")+'" onclick="PLtoggle(\''+x.id+'\')">'+(x.done?"&#10003;":"")+'</div>'
+      +'<button class="xbtn" onclick="PLdel(\''+x.id+'\')">&#10005;</button>'
+      +'</div></div>';
+  }).join(""):'';
+
+  var schedSection=(scheduled.length||unscheduled.length)
+    ?'<div class="box">'+(schedHtml||"")+(unscheduled.length?'<div style="font-size:11px;color:var(--muted);padding:8px 0 4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Unscheduled</div>':"")+unschedHtml+'</div>'
+    :'';
+
+  // checklist section
+  var clHtml='<div class="box">';
+  if(cl.length){
+    clHtml+=cl.map(function(t){
+      return'<div class="trow">'
+        +'<div class="tick'+(t.done?" on":"")+'" onclick="CLtick(\''+k+'\',\''+t.id+'\')">'+(t.done?"&#10003;":"")+'</div>'
+        +'<div style="flex:1;font-size:13px;color:'+(t.done?"var(--dim)":"var(--txt)")+';">'+(t.done?'<s>'+esc(t.task)+'</s>':esc(t.task))+'</div>'
+        +'<button class="xbtn" onclick="CLdel(\''+k+'\',\''+t.id+'\')">&#10005;</button>'
+        +'</div>';
+    }).join("");
+  } else {
+    clHtml+='<div class="empty" style="padding:16px 0">No checklist items — add one above</div>';
+  }
+  clHtml+='</div>';
+
+  document.getElementById("pplanner").innerHTML=
+    '<div class="rowsb mb10"><div class="ptitle">📅 Planner</div>'+progH(wkDone,allItems.length)+'</div>'
+    +nav+grid+dlabel+qaBox
+    +(scheduled.length||unscheduled.length?'<div class="section">📋 Schedule</div>'+schedSection:"")
+    +'<div class="section">✅ Checklist</div>'+clHtml;
+  save();
+}
+
+function PLsetQA(type){PL.qaType=type;PL.qaOpen=true;PL.qaTitle="";PL.qaTime="";PL.qaDesc="";PL.qaWho="";PL.qaTag="client";PLR();}
+function PLS(k){PL.sel=k;PL.qaOpen=false;PLR();}
+function PLP(){PL.ws=addD(PL.ws,-7);var p=PL.sel.split("-");var d=new Date();d.setFullYear(+p[0]);d.setMonth(+p[1]);d.setDate(+p[2]);PL.sel=fk(addD(d,-7));PLR();}
+function PLN(){PL.ws=addD(PL.ws,7);var p=PL.sel.split("-");var d=new Date();d.setFullYear(+p[0]);d.setMonth(+p[1]);d.setDate(+p[2]);PL.sel=fk(addD(d,7));PLR();}
+function PLtoggle(id){var x=ITEMS.find(function(i){return i.id===id;});if(x)x.done=!x.done;PLR();if(ACTIVE==="today")TODAYR();}
+function PLdel(id){ITEMS=ITEMS.filter(function(i){return i.id!==id;});PLR();}
+function CLtick(k,id){var cl=CHECKLIST[k]||[];var t=cl.find(function(x){return x.id===id;});if(t)t.done=!t.done;PLR();if(ACTIVE==="today")TODAYR();}
+function CLdel(k,id){if(CHECKLIST[k])CHECKLIST[k]=CHECKLIST[k].filter(function(x){return x.id!==id;});PLR();}
+
+function PLsave(){
+  var k=PL.sel;
+  if(PL.qaType==="checklist"){
+    if(!PL.qaTitle.trim()){toast("Please enter a task");return;}
+    if(!CHECKLIST[k])CHECKLIST[k]=[];
+    CHECKLIST[k].push({id:"c"+Date.now(),task:PL.qaTitle,done:false});
+    toast("Added to checklist ✅");
+  } else if(PL.qaType==="task"){
+    if(!PL.qaTitle.trim()){toast("Please enter a title");return;}
+    ITEMS.push({id:"i"+Date.now(),type:"task",date:k,time:parseTime(PL.qaTime),title:PL.qaTitle,desc:PL.qaDesc,tag:PL.qaTag,done:false});
+    toast("Task added ✅");
+  } else if(PL.qaType==="meeting"){
+    var who=PL.qaWho.trim();
+    if(!who){toast("Please select or enter who");return;}
+    if(!PL.qaTime.trim()){toast("Please enter a time");return;}
+    var mType=PL.qaWhoType==="client"?"Client Meeting":PL.qaWhoType==="builder"?"Builder Meeting":PL.qaWhoType==="lender"?"Lender Meeting":"Other";
+    var title="Meeting with "+who;
+    ITEMS.push({id:"i"+Date.now(),type:"meeting",date:k,time:parseTime(PL.qaTime),title:title,desc:PL.qaDesc,tag:"meeting",meetingType:mType,linkedTo:who,done:false});
+    toast("Meeting added ✅");
+  } else if(PL.qaType==="training"){
+    if(!PL.qaTitle.trim()){toast("Please enter a title");return;}
+    ITEMS.push({id:"i"+Date.now(),type:"training",date:k,time:parseTime(PL.qaTime),title:PL.qaTitle,desc:PL.qaDesc,tag:"training",done:false});
+    toast("Training added ✅");
+  }
+  PL.qaOpen=false;PL.qaTitle="";PL.qaTime="";PL.qaDesc="";PL.qaWho="";
+  PLR();if(ACTIVE==="today")TODAYR();
+}
+
+// keyboard arrow nav
+document.addEventListener("keydown",function(ev){
+  if(["INPUT","TEXTAREA","SELECT"].indexOf(ev.target.tagName)>-1)return;
+  if(ACTIVE!=="planner"&&ACTIVE!=="content")return;
+  if(ev.key==="ArrowLeft"){ev.preventDefault();if(ACTIVE==="planner")PLP();else CONP();}
+  if(ev.key==="ArrowRight"){ev.preventDefault();if(ACTIVE==="planner")PLN();else CONN();}
+});
+
+/* ===================== CLIENTS ===================== */
+function clientInPipeline(name){return PIP.data.some(function(l){return l.name===name;});}
+function addClientToPipeline(id){
+  var c=CLI.data.find(function(x){return x.id===id;});if(!c)return;
+  if(clientInPipeline(c.name)){toast(c.name+" already in Pipeline!");return;}
+  PIP.data.push({id:Date.now(),name:c.name,source:"Client",value:"TBD",next:"Initial consultation",stage:"Consultation",last:"Today"});
+  save();toast(c.name+" added to Pipeline 📊");CLIR();
+}
+function scheduleFromClient(id){
+  var c=CLI.data.find(function(x){return x.id===id;});if(!c)return;
+  // switch to planner, set quick-add to meeting with this client pre-filled
+  PL.qaType="meeting";PL.qaOpen=true;PL.qaWhoType="client";PL.qaWho=c.name;
+  PL.qaTitle="";PL.qaTime="";PL.qaDesc="";
+  goTab("planner");
+  setTimeout(function(){PLR();},50);
+  toast("Pick a day and time for "+c.name);
+}
+function CLIToggleNotes(id){CLI.expanded[id]=!CLI.expanded[id];if(!CLI.newNote[id])CLI.newNote[id]={text:"",date:"",showDate:false};CLIR();}
+function CLIAddNote(id){
+  var el=document.getElementById("cli-note-text-"+id);
+  var del=document.getElementById("cli-note-date-"+id);
+  var nn=CLI.newNote[id]||{};if(el)nn.text=el.value;if(del)nn.date=del.value;
+  if(!nn.text.trim())return;
+  if(!CLI.notes[id])CLI.notes[id]=[];
+  CLI.notes[id].unshift({id:"n"+Date.now(),text:nn.text,date:nn.date});
+  var c=CLI.data.find(function(x){return x.id===id;});
+  if(c)c.lastContact=nn.date||todayStr();
+  CLI.newNote[id]={text:"",date:"",showDate:false};save();CLIR();
+}
+function CLIDeleteNote(cid,nid){if(CLI.notes[cid])CLI.notes[cid]=CLI.notes[cid].filter(function(n){return n.id!==nid;});save();CLIR();}
+function CLIToggleDate(id){if(!CLI.newNote[id])CLI.newNote[id]={text:"",date:"",showDate:false};CLI.newNote[id].showDate=!CLI.newNote[id].showDate;CLIR();}
+function CLIR(){
+  var cards=CLI.data.map(function(c){
+    if(CLI.editing===c.id)return'<div class="box mb10"><div class="g2"><input class="inp" value="'+esc(CLI.ef.name!==undefined?CLI.ef.name:c.name)+'" oninput="CLI.ef.name=this.value" placeholder="Name"/><input class="inp" value="'+esc(CLI.ef.status!==undefined?CLI.ef.status:c.status)+'" oninput="CLI.ef.status=this.value" placeholder="Status"/></div><textarea class="inp mb8" rows="2" oninput="CLI.ef.note=this.value">'+esc(CLI.ef.note!==undefined?CLI.ef.note:c.note)+'</textarea><div class="row"><button class="gbtn" onclick="CLIS('+c.id+')">Save</button><button class="sbtn" onclick="CLIC()">Cancel</button></div></div>';
+    var inPip=clientInPipeline(c.name);
+    var pipBtn=inPip?'<button class="sbtn grn sml" style="cursor:default">✓ Pipeline</button>':'<button class="sbtn sml" onclick="addClientToPipeline('+c.id+')" style="background:#fff8e0;border-color:var(--gold);color:var(--gold)">+ Pipeline</button>';
+    var notesArr=CLI.notes[c.id]||[];var expanded=CLI.expanded[c.id];var nn=CLI.newNote[c.id]||{};
+    var days=FOLLOWUP_DAYS[c.priority]||7;var lastC=c.lastContact||c.addedDate||null;var overdue=false;
+    if(lastC){var diff=daysBetween(todayStr(),lastC);overdue=diff>=days;}
+    var overdueChip=overdue?'<span class="chip" style="background:#ffebee;color:#c62828;font-size:9px">⚠️ Follow-up due</span>':"";
+    var notesSection="";
+    if(expanded){
+      var noteLines=notesArr.length?notesArr.map(function(n){return'<div style="display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--bdr)"><div style="flex:1">'+(n.date?'<div style="font-size:10px;color:var(--gold);font-weight:600;margin-bottom:2px">📅 '+esc(n.date)+'</div>':"")+'<div style="font-size:13px;white-space:pre-wrap;line-height:1.6">'+esc(n.text)+'</div></div><button class="xbtn" onclick="CLIDeleteNote('+c.id+',\''+n.id+'\')">&#10005;</button></div>';}).join(""):'<div style="font-size:12px;color:var(--dim);padding:8px 0">No notes yet</div>';
+      notesSection='<div style="margin-top:10px;background:var(--card2);border-radius:10px;padding:12px"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Notes</div>'+noteLines+'<textarea id="cli-note-text-'+c.id+'" class="inp mt8" rows="3" placeholder="Type note...">'+esc(nn.text||"")+'</textarea>'+(nn.showDate?'<input id="cli-note-date-'+c.id+'" class="inp mt8" placeholder="Date e.g. May 15, 2026" value="'+esc(nn.date||"")+'"/>':"")+'<div class="row mt8"><button class="gbtn" onclick="CLIAddNote('+c.id+')">+ Add Note</button><button class="sbtn" onclick="CLIToggleDate('+c.id+')">'+(nn.showDate?"Hide Date":"+ Date")+'</button></div></div>';
+    }
+    return'<div class="box mb10"><div class="rowsb" style="align-items:flex-start"><div style="flex:1">'
+      +'<div class="row mb8" style="flex-wrap:wrap;gap:6px"><strong style="font-size:15px">'+esc(c.name)+'</strong>'+chip(PRIC[c.priority],c.priority)+overdueChip+'<span style="font-size:11px;color:var(--muted)">'+esc(c.type)+'</span></div>'
+      +'<div style="font-size:12px;color:var(--gold);font-weight:500;margin-bottom:5px">📍 '+esc(c.status)+'</div>'
+      +'<div style="font-size:12px;color:var(--muted);line-height:1.5">'+esc(c.note)+'</div>'
+      +'<div class="row mt8" style="flex-wrap:wrap;gap:6px">'
+      +pipBtn
+      +'<button class="sbtn sml blu" onclick="scheduleFromClient('+c.id+')">📅 Schedule</button>'
+      +'<button class="sbtn sml" onclick="CLIToggleNotes('+c.id+')">'+(expanded?"▲ Hide":"📝 Notes"+(notesArr.length?" ("+notesArr.length+")":""))+'</button>'
+      +'<button class="sbtn sml" onclick="CLIE('+c.id+')">Edit</button>'
+      +'</div>'+notesSection+'</div></div></div>';
+  }).join("");
+  var addF=CLI.open?'<div class="box hi mb10"><div class="g2"><input class="inp" placeholder="Name *" oninput="CLI.nc.name=this.value" value="'+esc(CLI.nc.name)+'"/><input class="inp" placeholder="Type (Buyer/Seller/Network)" oninput="CLI.nc.type=this.value" value="'+esc(CLI.nc.type)+'"/><input class="inp" placeholder="Status" oninput="CLI.nc.status=this.value" value="'+esc(CLI.nc.status)+'"/><select class="inp" onchange="CLI.nc.priority=this.value"><option value="high"'+(CLI.nc.priority==="high"?" selected":"")+'>High Priority</option><option value="medium"'+(CLI.nc.priority==="medium"?" selected":"")+'>Medium Priority</option><option value="low"'+(CLI.nc.priority==="low"?" selected":"")+'>Low Priority</option></select></div><textarea class="inp mb8" rows="2" placeholder="Notes..." oninput="CLI.nc.note=this.value">'+esc(CLI.nc.note)+'</textarea><div class="row"><button class="gbtn" onclick="CLIA()">Save</button><button class="sbtn" onclick="CLIT()">Cancel</button></div></div>':"";
+  document.getElementById("pclients").innerHTML='<div class="rowsb mb14"><div class="ptitle">👥 Clients</div><button class="gbtn" onclick="CLIT()">+ Client</button></div>'+addF+cards;
+  save();
+}
+function CLIT(){CLI.open=!CLI.open;CLIR();}
+function CLIA(){if(!CLI.nc.name.trim())return;CLI.data.push({id:Date.now(),name:CLI.nc.name,type:CLI.nc.type,status:CLI.nc.status,priority:CLI.nc.priority,note:CLI.nc.note,addedDate:todayStr()});CLI.open=false;CLI.nc={name:"",type:"Buyer",status:"Active",priority:"medium",note:""};CLIR();}
+function CLIE(id){CLI.editing=id;CLI.ef={};CLIR();}
+function CLIC(){CLI.editing=null;CLI.ef={};CLIR();}
+function CLIS(id){var c=CLI.data.find(function(x){return x.id===id;});if(c){if(CLI.ef.name!==undefined)c.name=CLI.ef.name;if(CLI.ef.status!==undefined)c.status=CLI.ef.status;if(CLI.ef.note!==undefined)c.note=CLI.ef.note;}CLI.editing=null;CLI.ef={};CLIR();}
+
+/* ===================== PIPELINE ===================== */
 function pipVisible(){if(PIP_F==="progress")return PIP.data.filter(function(l){return l.stage!=="Under Contract"&&l.stage!=="Closed";});if(PIP_F==="contract")return PIP.data.filter(function(l){return l.stage==="Under Contract";});if(PIP_F==="done")return PIP.data.filter(function(l){return l.stage==="Closed";});return PIP.data;}
 function PIPF(f){PIP_F=f;PIPR();}
-function stageChange(lid,ns){var l=PIP.data.find(function(x){return x.id===lid;});if(!l)return;l.stage=ns;l.last="Today";var c=CLI.data.find(function(x){return x.name===l.name;});if(c)c.status=ns;var taskText=STAGE_TASKS[ns];if(taskText){var k=fk(TODAY);if(!PL.tasks[k])PL.tasks[k]=[];PL.tasks[k].push({id:"pip"+Date.now(),time:"",title:l.name+" - "+taskText,desc:"Auto from Pipeline",tag:"client",done:false});toast("Task added to Planner 📅");}save();PIPR();}
+function stageChange(lid,ns){
+  var l=PIP.data.find(function(x){return x.id===lid;});if(!l)return;
+  l.stage=ns;l.last="Today";
+  var c=CLI.data.find(function(x){return x.name===l.name;});if(c)c.status=ns;
+  var taskText=STAGE_TASKS[ns];
+  if(taskText){var k=fk(TODAY);ITEMS.push({id:"pip"+Date.now(),type:"task",date:k,time:"",title:l.name+" - "+taskText,desc:"Auto from Pipeline",tag:"client",done:false});toast("Task added to Planner 📅");}
+  save();PIPR();
+}
 function PIPR(){
   var total=PIP.data.reduce(function(s,l){var n=parseInt((l.value||"").replace(/\D/g,""));return s+(isNaN(n)?0:n);},0);
   var stats='<div class="g3 mb14"><div class="stat"><div class="sn">'+PIP.data.length+'</div><div class="sl">All Leads</div></div><div class="stat"><div class="sn">$'+(total/1000).toFixed(0)+'k</div><div class="sl">Pipeline</div></div><div class="stat"><div class="sn">'+PIP.data.filter(function(l){return l.stage==="Under Contract"||l.stage==="Closed";}).length+'</div><div class="sl">Contracted</div></div></div>';
-  var fbtns=['all','progress','contract','done'].map(function(f){var labels={all:"All",progress:"In Progress",contract:"In Contract",done:"Completed"};var on=PIP_F===f;return '<button onclick="PIPF(\''+f+'\')" style="padding:7px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid '+(on?'var(--gold)':'var(--bdr2)')+';background:'+(on?'var(--gold)':'var(--card2)')+';color:'+(on?'#fff':'var(--muted)')+'">'+labels[f]+'</button>';}).join("");
-  var filters='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">'+fbtns+'</div>';
+  var fbtns=['all','progress','contract','done'].map(function(f){var labels={all:"All",progress:"In Progress",contract:"In Contract",done:"Completed"};var on=PIP_F===f;return'<button onclick="PIPF(\''+f+'\')" style="padding:7px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid '+(on?'var(--gold)':'var(--bdr2)')+';background:'+(on?'var(--gold)':'var(--card2)')+';color:'+(on?'#fff':'var(--muted)')+'">'+labels[f]+'</button>';}).join("");
   var vis=pipVisible();
   var cards=vis.map(function(l){
     var sc=SGC[l.stage]||"#888";
-    if(PIP.editing===l.id)return '<div class="box mb10"><div class="g2"><input class="inp" value="'+esc(PIP.ef.name!==undefined?PIP.ef.name:l.name)+'" oninput="PIP.ef.name=this.value"/><input class="inp" value="'+esc(PIP.ef.source!==undefined?PIP.ef.source:l.source)+'" oninput="PIP.ef.source=this.value"/><input class="inp" value="'+esc(PIP.ef.value!==undefined?PIP.ef.value:l.value)+'" oninput="PIP.ef.value=this.value" placeholder="Value"/><input class="inp" value="'+esc(PIP.ef.next!==undefined?PIP.ef.next:l.next)+'" oninput="PIP.ef.next=this.value" placeholder="Next action"/></div><div class="row"><button class="gbtn" onclick="PIPE('+l.id+')">Save</button><button class="sbtn" onclick="PIPC()">Cancel</button></div></div>';
-    var stBtns=STAGES.map(function(s){return '<button class="stbtn'+(l.stage===s?" on":"")+'" onclick="stageChange('+l.id+',\''+s+'\')">'+s+'</button>';}).join("");
-    return '<div class="box mb10"><div class="rowsb mb8" style="align-items:flex-start"><div><strong style="font-size:15px">'+esc(l.name)+'</strong><div style="font-size:11px;color:var(--muted);margin-top:3px">'+esc(l.source)+' · '+esc(l.value)+' · Last: '+esc(l.last)+'</div></div><div class="row" style="gap:6px">'+chip(sc,l.stage)+'<button class="sbtn sml" onclick="PIPEE('+l.id+')">Edit</button><button class="xbtn" onclick="PIPX('+l.id+')">&#10005;</button></div></div><div style="font-size:12px;color:var(--gold);font-weight:600;margin-bottom:10px">→ '+esc(l.next)+'</div><div class="stlist">'+stBtns+'</div></div>';
+    if(PIP.editing===l.id)return'<div class="box mb10"><div class="g2"><input class="inp" value="'+esc(PIP.ef.name!==undefined?PIP.ef.name:l.name)+'" oninput="PIP.ef.name=this.value"/><input class="inp" value="'+esc(PIP.ef.source!==undefined?PIP.ef.source:l.source)+'" oninput="PIP.ef.source=this.value"/><input class="inp" value="'+esc(PIP.ef.value!==undefined?PIP.ef.value:l.value)+'" oninput="PIP.ef.value=this.value" placeholder="Value"/><input class="inp" value="'+esc(PIP.ef.next!==undefined?PIP.ef.next:l.next)+'" oninput="PIP.ef.next=this.value" placeholder="Next action"/></div><div class="row"><button class="gbtn" onclick="PIPE('+l.id+')">Save</button><button class="sbtn" onclick="PIPC()">Cancel</button></div></div>';
+    var stBtns=STAGES.map(function(s){return'<button class="stbtn'+(l.stage===s?" on":"")+'" onclick="stageChange('+l.id+',\''+s+'\')">'+s+'</button>';}).join("");
+    return'<div class="box mb10"><div class="rowsb mb8" style="align-items:flex-start"><div><strong style="font-size:15px">'+esc(l.name)+'</strong><div style="font-size:11px;color:var(--muted);margin-top:3px">'+esc(l.source)+' · '+esc(l.value)+' · Last: '+esc(l.last)+'</div></div><div class="row" style="gap:6px">'+chip(sc,l.stage)+'<button class="sbtn sml" onclick="PIPEE('+l.id+')">Edit</button><button class="xbtn" onclick="PIPX('+l.id+')">&#10005;</button></div></div><div style="font-size:12px;color:var(--gold);font-weight:600;margin-bottom:10px">→ '+esc(l.next)+'</div><div class="stlist">'+stBtns+'</div></div>';
   }).join("")+(vis.length?"":'<div class="empty">No leads in this view</div>');
   var addF=PIP.open?'<div class="box hi mb10"><div class="g2"><input class="inp" placeholder="Client name" oninput="PIP.nl.name=this.value" value="'+esc(PIP.nl.name)+'"/><input class="inp" placeholder="Source" oninput="PIP.nl.source=this.value" value="'+esc(PIP.nl.source)+'"/><input class="inp" placeholder="Approx. value" oninput="PIP.nl.value=this.value" value="'+esc(PIP.nl.value)+'"/><input class="inp" placeholder="Next action" oninput="PIP.nl.next=this.value" value="'+esc(PIP.nl.next)+'"/></div><div class="row"><button class="gbtn" onclick="PIPA()">Save</button><button class="sbtn" onclick="PIPT()">Cancel</button></div></div>':"";
-  document.getElementById("ppipeline").innerHTML='<div class="rowsb mb10"><div class="ptitle">📊 Lead Pipeline</div><button class="gbtn" onclick="PIPT()">+ Lead</button></div>'+stats+filters+addF+cards;
+  document.getElementById("ppipeline").innerHTML='<div class="rowsb mb10"><div class="ptitle">📊 Pipeline</div><button class="gbtn" onclick="PIPT()">+ Lead</button></div>'+stats+'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">'+fbtns+'</div>'+addF+cards;
   save();
 }
 function PIPT(){PIP.open=!PIP.open;PIP.editing=null;PIPR();}
@@ -571,23 +747,43 @@ function PIPC(){PIP.editing=null;PIP.ef={};PIPR();}
 function PIPE(id){var l=PIP.data.find(function(x){return x.id===id;});if(l){if(PIP.ef.name!==undefined)l.name=PIP.ef.name;if(PIP.ef.source!==undefined)l.source=PIP.ef.source;if(PIP.ef.value!==undefined)l.value=PIP.ef.value;if(PIP.ef.next!==undefined)l.next=PIP.ef.next;}PIP.editing=null;PIP.ef={};PIPR();}
 function PIPX(id){PIP.data=PIP.data.filter(function(x){return x.id!==id;});PIPR();}
 
+/* ===================== CONTENT ===================== */
+function CONR(){
+  var dp=CON.posts.filter(function(p){return p.day===CON.sel;});
+  var ws=CON.ws;var days=Array.from({length:7},function(_,i){return addD(ws,i);});
+  var grid='<div class="dgrid">';
+  days.forEach(function(d){
+    var k=fk(d);var cls="dc";if(k===CON.sel)cls+=" sel";else if(isToday(d))cls+=" tod";else if(isWknd(d))cls+=" wknd";
+    var n=CON.posts.filter(function(p){return p.day===k;}).length;
+    grid+='<div class="'+cls+'" onclick="CONS(\''+k+'\')"><div class="dn">'+DN[d.getDay()]+'</div><div class="dd">'+d.getDate()+'</div><div class="db">'+(n?n+"p":"·")+'</div></div>';
+  });grid+='</div>';
+  var rows=dp.length?dp.map(function(p){return'<div class="srow"><div class="sicon" style="font-size:14px">'+({Instagram:"📸",Facebook:"👍",TikTok:"🎵",LinkedIn:"💼"}[p.platform]||"📱")+'</div><div class="sinfo"><div class="stitle">'+esc(p.platform)+' · '+esc(p.type)+'</div><div class="ssub">'+esc(p.topic)+'</div></div><button class="stsbadge" style="background:'+STC[p.status]+'20;color:'+STC[p.status]+';border-color:'+STC[p.status]+'40;margin-right:6px" onclick="CONC('+p.id+')">'+STL[p.status]+'</button><button class="xbtn" onclick="CONX('+p.id+')">&#10005;</button></div>';}).join(""):'<div class="empty">No posts for this day</div>';
+  var addF=CON.open?'<div class="box hi mb10"><div class="g2"><input class="inp" placeholder="Platform" oninput="CON.np.platform=this.value" value="'+esc(CON.np.platform)+'"/><input class="inp" placeholder="Type (Reel, Post...)" oninput="CON.np.type=this.value" value="'+esc(CON.np.type)+'"/></div><input class="inp mb8" placeholder="Topic / caption idea..." oninput="CON.np.topic=this.value" value="'+esc(CON.np.topic)+'"/><div class="row mt8"><button class="gbtn" onclick="CONA()">Save</button><button class="sbtn" onclick="CONO()">Cancel</button></div></div>':"";
+  var sd=days.find(function(d){return fk(d)===CON.sel;})||TODAY;
+  document.getElementById("pcontent").innerHTML='<div class="rowsb mb10"><div class="ptitle">📱 Content</div><button class="gbtn" onclick="CONO()">+ Post</button></div>'
+    +'<div class="wknav"><button class="arw" onclick="CONP()">&#8249;</button><div class="rng">'+fr(ws)+'</div><button class="arw" onclick="CONN()">&#8250;</button></div>'
+    +grid+'<div class="dlabel"><div class="dname">'+fl(sd)+(isWknd(sd)?'<span class="wlbl">Weekend</span>':'')+(isToday(sd)?'<span class="tlbl">Today</span>':'')+'</div></div>'
+    +addF+'<div class="box">'+rows+'</div>';
+  save();
+}
+function CONP(){CON.ws=addD(CON.ws,-7);CON.sel=fk(CON.ws);CONR();}
+function CONN(){CON.ws=addD(CON.ws,7);CON.sel=fk(CON.ws);CONR();}
+function CONS(k){CON.sel=k;CONR();}
+function CONC(id){var p=CON.posts.find(function(x){return x.id===id;});if(p)p.status=STCY[p.status];CONR();}
+function CONX(id){CON.posts=CON.posts.filter(function(x){return x.id!==id;});CONR();}
+function CONO(){CON.open=!CON.open;CONR();}
+function CONA(){if(!CON.np.topic.trim())return;CON.posts.push({id:Date.now(),day:CON.sel,platform:CON.np.platform,type:CON.np.type,topic:CON.np.topic,status:"planned"});CON.np={platform:"Instagram",type:"Post",topic:""};CON.open=false;CONR();}
+
 /* ===================== BUILDS ===================== */
-var BLD={open:false,editing:null,ef:{},nb:{community:"",location:"",price:"",status:"",notes:""},data:[
-  {id:1,community:"Maronda Homes",location:"Canal Winchester",price:"$280k-$380k",status:"Training Tue",notes:"Builder training Tuesday.",visited:false},
-  {id:2,community:"Rockford Homes",location:"Columbus Area",price:"$300k-$450k",status:"Visit Thu",notes:"Visiting Thursday for content.",visited:false},
-  {id:3,community:"Fisher's Homes",location:"Plain City & Delaware",price:"$320k-$500k",status:"Visit Thu",notes:"Two locations Thursday.",visited:false},
-  {id:4,community:"Dr. Horton",location:"Columbus Metro",price:"$260k-$420k",status:"Meeting Wed",notes:"Meeting Michael Wednesday.",visited:false}
-]};
-function getSearchingClients(){return PIP.data.filter(function(l){return l.stage==="Searching"||l.stage==="Land Search";}).map(function(l){return l.name;});}
 function BLDR(){
-  var searching=getSearchingClients();
+  var searching=PIP.data.filter(function(l){return l.stage==="Searching"||l.stage==="Land Search";}).map(function(l){return l.name;});
   var matchBanner=searching.length?'<div class="box blue mb10"><div style="font-size:12px;font-weight:700;color:#1565c0;margin-bottom:4px">🔍 Clients currently searching:</div><div style="font-size:12px;color:#1565c0">'+searching.join(", ")+'</div></div>':"";
   var cards=BLD.data.map(function(b){
-    if(BLD.editing===b.id)return '<div class="box mb10"><div class="g2"><input class="inp" value="'+esc(BLD.ef.community!==undefined?BLD.ef.community:b.community)+'" oninput="BLD.ef.community=this.value" placeholder="Name"/><input class="inp" value="'+esc(BLD.ef.location!==undefined?BLD.ef.location:b.location)+'" oninput="BLD.ef.location=this.value" placeholder="Location"/><input class="inp" value="'+esc(BLD.ef.price!==undefined?BLD.ef.price:b.price)+'" oninput="BLD.ef.price=this.value" placeholder="Price"/><input class="inp" value="'+esc(BLD.ef.status!==undefined?BLD.ef.status:b.status)+'" oninput="BLD.ef.status=this.value" placeholder="Status"/></div><textarea class="inp mb8" rows="2" oninput="BLD.ef.notes=this.value">'+esc(BLD.ef.notes!==undefined?BLD.ef.notes:b.notes)+'</textarea><div class="row"><button class="gbtn" onclick="BLDS('+b.id+')">Save</button><button class="sbtn" onclick="BLDC()">Cancel</button></div></div>';
-    return '<div class="box mb10'+(b.visited?" faded":"")+'"><div class="rowsb mb8" style="align-items:flex-start"><div><strong style="font-size:15px">'+esc(b.community)+'</strong><div style="font-size:11px;color:var(--muted);margin-top:2px">📍 '+esc(b.location)+' · '+esc(b.price)+'</div></div><div class="row" style="gap:6px">'+chip("#c47f00",b.status)+'<button class="xbtn" onclick="BLDX('+b.id+')">&#10005;</button></div></div><div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px">'+esc(b.notes)+'</div><div class="row"><button class="sbtn'+(b.visited?" grn":"")+'" onclick="BLDV('+b.id+')">'+(b.visited?"✅ Visited":"Mark Visited")+'</button><button class="sbtn" onclick="BLDE('+b.id+')">Edit</button></div></div>';
+    if(BLD.editing===b.id)return'<div class="box mb10"><div class="g2"><input class="inp" value="'+esc(BLD.ef.community!==undefined?BLD.ef.community:b.community)+'" oninput="BLD.ef.community=this.value" placeholder="Name"/><input class="inp" value="'+esc(BLD.ef.location!==undefined?BLD.ef.location:b.location)+'" oninput="BLD.ef.location=this.value" placeholder="Location"/><input class="inp" value="'+esc(BLD.ef.price!==undefined?BLD.ef.price:b.price)+'" oninput="BLD.ef.price=this.value" placeholder="Price"/><input class="inp" value="'+esc(BLD.ef.status!==undefined?BLD.ef.status:b.status)+'" oninput="BLD.ef.status=this.value" placeholder="Status"/></div><textarea class="inp mb8" rows="2" oninput="BLD.ef.notes=this.value">'+esc(BLD.ef.notes!==undefined?BLD.ef.notes:b.notes)+'</textarea><div class="row"><button class="gbtn" onclick="BLDS('+b.id+')">Save</button><button class="sbtn" onclick="BLDC()">Cancel</button></div></div>';
+    return'<div class="box mb10'+(b.visited?" faded":"")+'"><div class="rowsb mb8" style="align-items:flex-start"><div><strong style="font-size:15px">'+esc(b.community)+'</strong><div style="font-size:11px;color:var(--muted);margin-top:2px">📍 '+esc(b.location)+' · '+esc(b.price)+'</div></div><div class="row" style="gap:6px">'+chip("#c47f00",b.status)+'<button class="xbtn" onclick="BLDX('+b.id+')">&#10005;</button></div></div><div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px">'+esc(b.notes)+'</div><div class="row"><button class="sbtn'+(b.visited?" grn":"")+'" onclick="BLDV('+b.id+')">'+(b.visited?"✅ Visited":"Mark Visited")+'</button><button class="sbtn" onclick="BLDE('+b.id+')">Edit</button></div></div>';
   }).join("");
   var addF=BLD.open?'<div class="box hi mb10"><div class="g2"><input class="inp" placeholder="Community name" oninput="BLD.nb.community=this.value" value="'+esc(BLD.nb.community)+'"/><input class="inp" placeholder="Location" oninput="BLD.nb.location=this.value" value="'+esc(BLD.nb.location)+'"/><input class="inp" placeholder="Price range" oninput="BLD.nb.price=this.value" value="'+esc(BLD.nb.price)+'"/><input class="inp" placeholder="Status" oninput="BLD.nb.status=this.value" value="'+esc(BLD.nb.status)+'"/></div><textarea class="inp mb8" rows="2" placeholder="Notes..." oninput="BLD.nb.notes=this.value">'+esc(BLD.nb.notes)+'</textarea><div class="row"><button class="gbtn" onclick="BLDA()">Save</button><button class="sbtn" onclick="BLDT()">Cancel</button></div></div>':"";
-  document.getElementById("pbuilds").innerHTML='<div class="rowsb mb14"><div class="ptitle">🏗️ New Builds</div><button class="gbtn" onclick="BLDT()">+ Community</button></div>'+matchBanner+addF+cards;
+  document.getElementById("pbuilds").innerHTML='<div class="rowsb mb14"><div class="ptitle">🏗️ Builds</div><button class="gbtn" onclick="BLDT()">+ Community</button></div>'+matchBanner+addF+cards;
   save();
 }
 function BLDT(){BLD.open=!BLD.open;BLDR();}
@@ -599,11 +795,10 @@ function BLDC(){BLD.editing=null;BLD.ef={};BLDR();}
 function BLDS(id){var b=BLD.data.find(function(x){return x.id===id;});if(b){if(BLD.ef.community!==undefined)b.community=BLD.ef.community;if(BLD.ef.location!==undefined)b.location=BLD.ef.location;if(BLD.ef.price!==undefined)b.price=BLD.ef.price;if(BLD.ef.status!==undefined)b.status=BLD.ef.status;if(BLD.ef.notes!==undefined)b.notes=BLD.ef.notes;}BLD.editing=null;BLD.ef={};BLDR();}
 
 /* ===================== LENDERS ===================== */
-var LND={open:false,editing:null,ef:{},nl:{name:"",company:"",phone:"",email:"",notes:""},data:[]};
 function LNDR(){
   var cards=LND.data.map(function(l){
-    if(LND.editing===l.id)return '<div class="box mb10"><div class="g2"><input class="inp" value="'+esc(LND.ef.name!==undefined?LND.ef.name:l.name)+'" oninput="LND.ef.name=this.value" placeholder="Name"/><input class="inp" value="'+esc(LND.ef.company!==undefined?LND.ef.company:l.company)+'" oninput="LND.ef.company=this.value" placeholder="Company"/><input class="inp" value="'+esc(LND.ef.phone!==undefined?LND.ef.phone:l.phone)+'" oninput="LND.ef.phone=this.value" placeholder="Phone"/><input class="inp" value="'+esc(LND.ef.email!==undefined?LND.ef.email:l.email)+'" oninput="LND.ef.email=this.value" placeholder="Email"/></div><textarea class="inp mb8" rows="2" oninput="LND.ef.notes=this.value">'+esc(LND.ef.notes!==undefined?LND.ef.notes:l.notes)+'</textarea><div class="row"><button class="gbtn" onclick="LNDSave('+l.id+')">Save</button><button class="sbtn" onclick="LNDCancel()">Cancel</button></div></div>';
-    return '<div class="box mb10"><div class="rowsb mb8" style="align-items:flex-start"><div style="flex:1"><strong style="font-size:15px">'+esc(l.name)+'</strong>'+(l.company?'<span style="font-size:11px;color:var(--muted);margin-left:8px">'+esc(l.company)+'</span>':"")+'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">'+(l.phone?'<a href="tel:'+esc(l.phone)+'" style="font-size:12px;color:#1565c0;text-decoration:none">📞 '+esc(l.phone)+'</a>':"")+(l.email?'<a href="mailto:'+esc(l.email)+'" style="font-size:12px;color:#1565c0;text-decoration:none">✉️ '+esc(l.email)+'</a>':"")+'</div>'+(l.notes?'<div style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">'+esc(l.notes)+'</div>':"")+'</div><div class="row" style="gap:6px"><button class="sbtn sml" onclick="LNDEdit('+l.id+')">Edit</button><button class="xbtn" onclick="LNDDel('+l.id+')">&#10005;</button></div></div></div>';
+    if(LND.editing===l.id)return'<div class="box mb10"><div class="g2"><input class="inp" value="'+esc(LND.ef.name!==undefined?LND.ef.name:l.name)+'" oninput="LND.ef.name=this.value" placeholder="Name"/><input class="inp" value="'+esc(LND.ef.company!==undefined?LND.ef.company:l.company)+'" oninput="LND.ef.company=this.value" placeholder="Company"/><input class="inp" value="'+esc(LND.ef.phone!==undefined?LND.ef.phone:l.phone)+'" oninput="LND.ef.phone=this.value" placeholder="Phone"/><input class="inp" value="'+esc(LND.ef.email!==undefined?LND.ef.email:l.email)+'" oninput="LND.ef.email=this.value" placeholder="Email"/></div><textarea class="inp mb8" rows="2" oninput="LND.ef.notes=this.value">'+esc(LND.ef.notes!==undefined?LND.ef.notes:l.notes)+'</textarea><div class="row"><button class="gbtn" onclick="LNDSave('+l.id+')">Save</button><button class="sbtn" onclick="LNDCancel()">Cancel</button></div></div>';
+    return'<div class="box mb10"><div class="rowsb mb8" style="align-items:flex-start"><div style="flex:1"><strong style="font-size:15px">'+esc(l.name)+'</strong>'+(l.company?'<span style="font-size:11px;color:var(--muted);margin-left:8px">'+esc(l.company)+'</span>':"")+'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">'+(l.phone?'<a href="tel:'+esc(l.phone)+'" style="font-size:12px;color:#1565c0;text-decoration:none">📞 '+esc(l.phone)+'</a>':"")+(l.email?'<a href="mailto:'+esc(l.email)+'" style="font-size:12px;color:#1565c0;text-decoration:none">✉️ '+esc(l.email)+'</a>':"")+'</div>'+(l.notes?'<div style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">'+esc(l.notes)+'</div>':"")+'</div><div class="row" style="gap:6px"><button class="sbtn sml" onclick="LNDEdit('+l.id+')">Edit</button><button class="xbtn" onclick="LNDDel('+l.id+')">&#10005;</button></div></div></div>';
   }).join("");
   var addF=LND.open?'<div class="box hi mb10"><div class="g2"><input class="inp" placeholder="Full name *" oninput="LND.nl.name=this.value" value="'+esc(LND.nl.name)+'"/><input class="inp" placeholder="Company / Bank" oninput="LND.nl.company=this.value" value="'+esc(LND.nl.company)+'"/><input class="inp" placeholder="Phone" oninput="LND.nl.phone=this.value" value="'+esc(LND.nl.phone)+'"/><input class="inp" placeholder="Email" oninput="LND.nl.email=this.value" value="'+esc(LND.nl.email)+'"/></div><textarea class="inp mb8" rows="2" placeholder="Notes..." oninput="LND.nl.notes=this.value">'+esc(LND.nl.notes)+'</textarea><div class="row"><button class="gbtn" onclick="LNDAdd()">Save</button><button class="sbtn" onclick="LND.open=false;LNDR()">Cancel</button></div></div>':"";
   document.getElementById("plenders").innerHTML='<div class="rowsb mb14"><div class="ptitle">🏦 Lenders</div><button class="gbtn" onclick="LND.open=!LND.open;LNDR()">+ Lender</button></div>'+addF+(LND.data.length?cards:'<div class="empty">No lenders yet — add your first one!</div>');
@@ -616,11 +811,9 @@ function LNDSave(id){var l=LND.data.find(function(x){return x.id===id;});if(l){i
 function LNDDel(id){LND.data=LND.data.filter(function(x){return x.id!==id;});LNDR();}
 
 /* ===================== PROFIT ===================== */
-var PROFIT={inMentoring:true,dealsCompleted:0,deals:[],open:false,nd:{client:"",salePrice:"",date:""}};
-var CAP_LIMIT=6000;var COMM_RATE=0.03;
 function getCapYear(ds){var d=ds?new Date(ds):new Date();var y=d.getFullYear();var m=d.getMonth()+1;return m>=3?y:y-1;}
 function calcDeal(sp,dc,capPaid){
-  var gross=sp*COMM_RATE;var redOneAmt=gross*0.30;var remaining=CAP_LIMIT-capPaid;
+  var gross=sp*0.03;var redOneAmt=gross*0.30;var remaining=CAP_LIMIT-capPaid;
   if(remaining<=0)redOneAmt=0;else if(redOneAmt>remaining)redOneAmt=remaining;
   var mentAmt=0;if(PROFIT.inMentoring){var mp=dc<6?0.20:0.10;mentAmt=gross*mp;}
   return{gross:gross,redOne:redOneAmt,mentoring:mentAmt,vera:gross-redOneAmt-mentAmt};
@@ -629,67 +822,62 @@ function PRR(){
   var yearMap={};var sorted=PROFIT.deals.slice().sort(function(a,b){return new Date(a.date)-new Date(b.date);});
   sorted.forEach(function(d){var cy=getCapYear(d.date);if(!yearMap[cy])yearMap[cy]={deals:[],grossTotal:0,redOneTotal:0,mentTotal:0,veraTotal:0};yearMap[cy].deals.push(d);yearMap[cy].grossTotal+=d.gross;yearMap[cy].redOneTotal+=d.redOne;yearMap[cy].mentTotal+=d.mentoring;yearMap[cy].veraTotal+=d.vera;});
   var curCapYear=getCapYear(null);var capThisYear=sorted.filter(function(d){return getCapYear(d.date)===curCapYear;}).reduce(function(s,d){return s+d.redOne;},0);var capPct=Math.min(100,Math.round(capThisYear/CAP_LIMIT*100));
-  var mentStatus=PROFIT.inMentoring?(PROFIT.dealsCompleted<6?'<span style="color:#d4820a;font-weight:700">In Mentoring · Deal '+PROFIT.dealsCompleted+'/6 · 20% fee</span>':'<span style="color:#2e7d32;font-weight:700">In Mentoring · 6+ deals · 10% fee</span>'):'<span style="color:#888">Not in Mentoring</span>';
-  var settings='<div class="box mb10"><div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px">⚙️ Commission Settings</div><div class="g2" style="margin-bottom:10px"><div style="background:var(--card2);border-radius:10px;padding:12px;text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Commission Rate</div><div style="font-size:22px;font-weight:700;color:var(--txt)">3%</div></div><div style="background:var(--card2);border-radius:10px;padding:12px;text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">RedOne Cap/Year</div><div style="font-size:22px;font-weight:700;color:var(--txt)">$6k</div></div></div><div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px"><span>RedOne Cap Progress (Mar '+curCapYear+' – Feb '+(curCapYear+1)+')</span><span>'+fmt(capThisYear)+' / '+fmt(CAP_LIMIT)+'</span></div><div style="height:8px;background:var(--bdr);border-radius:4px"><div style="height:8px;background:'+(capPct>=100?'#27ae60':'#c47f00')+';border-radius:4px;width:'+capPct+'%"></div></div>'+(capPct>=100?'<div style="font-size:11px;color:#27ae60;font-weight:700;margin-top:4px">✅ Cap met! RedOne = $0 for rest of year</div>':"")+'</div><div style="padding-top:10px;border-top:1px solid var(--bdr)"><div style="font-size:12px;margin-bottom:8px">'+mentStatus+'</div><label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;margin-bottom:8px"><input type="checkbox" '+(PROFIT.inMentoring?"checked":"")+' onchange="PROFIT.inMentoring=this.checked;PRR()" style="width:18px;height:18px"/>Currently in Mentoring Program</label><div class="row"><span style="font-size:13px">Deals completed:</span><button class="sbtn sml" onclick="if(PROFIT.dealsCompleted>0)PROFIT.dealsCompleted--;PRR()">−</button><span style="font-size:16px;font-weight:700;color:var(--gold);min-width:24px;text-align:center">'+PROFIT.dealsCompleted+'</span><button class="sbtn sml" onclick="PROFIT.dealsCompleted++;PRR()">+</button><span style="font-size:11px;color:var(--muted)">'+(PROFIT.dealsCompleted<6?(6-PROFIT.dealsCompleted)+" more → 10%":"✅ 10% active")+'</span></div></div></div>';
-  var addForm=PROFIT.open?'<div class="box hi mb10"><div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:10px">Add Closed Deal</div><div class="g2"><input class="inp" placeholder="Client name" oninput="PROFIT.nd.client=this.value" value="'+esc(PROFIT.nd.client)+'"/><input class="inp" placeholder="Sale price e.g. 280000" oninput="PROFIT.nd.salePrice=this.value" value="'+esc(PROFIT.nd.salePrice)+'"/></div><input class="inp mb8" type="date" oninput="PROFIT.nd.date=this.value" value="'+esc(PROFIT.nd.date)+'"/><div class="row"><button class="gbtn" onclick="PRAdd()">Save Deal</button><button class="sbtn" onclick="PROFIT.open=false;PRR()">Cancel</button></div></div>':"";
+  var mentStatus=PROFIT.inMentoring?(PROFIT.dealsCompleted<6?'<span style="color:#d4820a;font-weight:700">In Mentoring · Deal '+PROFIT.dealsCompleted+'/6 · 20%</span>':'<span style="color:#2e7d32;font-weight:700">In Mentoring · 6+ deals · 10%</span>'):'<span style="color:#888">Not in Mentoring</span>';
+  var settings='<div class="box mb10"><div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px">⚙️ Settings</div>'
+    +'<div class="g2" style="margin-bottom:10px"><div style="background:var(--card2);border-radius:10px;padding:12px;text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Commission</div><div style="font-size:22px;font-weight:700">3%</div></div><div style="background:var(--card2);border-radius:10px;padding:12px;text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase">RedOne Cap</div><div style="font-size:22px;font-weight:700">$6k</div></div></div>'
+    +'<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px"><span>RedOne Cap (Mar '+curCapYear+' – Feb '+(curCapYear+1)+')</span><span>'+fmt(capThisYear)+' / $6,000</span></div><div style="height:8px;background:var(--bdr);border-radius:4px"><div style="height:8px;background:'+(capPct>=100?'#27ae60':'#c47f00')+';border-radius:4px;width:'+capPct+'%"></div></div>'+(capPct>=100?'<div style="font-size:11px;color:#27ae60;font-weight:700;margin-top:4px">✅ Cap met! RedOne = $0</div>':"")+'</div>'
+    +'<div style="padding-top:10px;border-top:1px solid var(--bdr)"><div style="font-size:12px;margin-bottom:8px">'+mentStatus+'</div>'
+    +'<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;margin-bottom:8px"><input type="checkbox" '+(PROFIT.inMentoring?"checked":"")+' onchange="PROFIT.inMentoring=this.checked;PRR()" style="width:18px;height:18px"/>In Mentoring Program</label>'
+    +'<div class="row"><span style="font-size:13px">Deals:</span><button class="sbtn sml" onclick="if(PROFIT.dealsCompleted>0)PROFIT.dealsCompleted--;PRR()">−</button><span style="font-size:16px;font-weight:700;color:var(--gold);min-width:24px;text-align:center">'+PROFIT.dealsCompleted+'</span><button class="sbtn sml" onclick="PROFIT.dealsCompleted++;PRR()">+</button><span style="font-size:11px;color:var(--muted)">'+(PROFIT.dealsCompleted<6?(6-PROFIT.dealsCompleted)+" more → 10%":"✅ 10% rate")+'</span></div></div></div>';
+  var addForm=PROFIT.open?'<div class="box hi mb10"><div class="g2"><input class="inp" placeholder="Client name" oninput="PROFIT.nd.client=this.value" value="'+esc(PROFIT.nd.client)+'"/><input class="inp" placeholder="Sale price e.g. 280000" oninput="PROFIT.nd.salePrice=this.value" value="'+esc(PROFIT.nd.salePrice)+'"/></div><input class="inp mb8" type="date" oninput="PROFIT.nd.date=this.value" value="'+esc(PROFIT.nd.date)+'"/><div class="row"><button class="gbtn" onclick="PRAdd()">Save Deal</button><button class="sbtn" onclick="PROFIT.open=false;PRR()">Cancel</button></div></div>':"";
   var years=Object.keys(yearMap).sort(function(a,b){return b-a;});
-  var yearCards=years.map(function(cy){var yd=yearMap[cy];var dealRows=yd.deals.map(function(d){return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:4px;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:12px;align-items:center"><div><div style="font-weight:600">'+esc(d.client)+'</div><div style="color:var(--muted);font-size:10px">'+esc(d.date)+(d.salePrice?' · $'+Number(d.salePrice).toLocaleString():"")+'</div></div><div style="color:var(--muted)">'+fmtK(d.gross)+'</div><div style="color:#c0392b">-'+fmtK(d.redOne)+'</div><div style="color:#d4820a">-'+fmtK(d.mentoring)+'</div><div style="color:#27ae60;font-weight:700">'+fmtK(d.vera)+'</div></div>';}).join("");
-  return '<div class="box mb10"><div class="rowsb mb10"><div style="font-size:15px;font-weight:700">📆 '+cy+'-'+(+cy+1)+' (Mar–Feb)</div><div style="text-align:right"><div style="font-size:10px;color:var(--muted)">Take-Home</div><div style="font-size:22px;font-weight:700;color:#27ae60">'+fmt(yd.veraTotal)+'</div></div></div><div class="g3" style="margin-bottom:12px"><div style="background:var(--card2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Gross</div><div style="font-size:16px;font-weight:700">'+fmtK(yd.grossTotal)+'</div></div><div style="background:#fff0f0;border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:#c0392b;text-transform:uppercase">RedOne</div><div style="font-size:16px;font-weight:700;color:#c0392b">-'+fmtK(yd.redOneTotal)+'</div></div><div style="background:#fff8e8;border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:#d4820a;text-transform:uppercase">Mentoring</div><div style="font-size:16px;font-weight:700;color:#d4820a">-'+fmtK(yd.mentTotal)+'</div></div></div><div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:4px;padding:6px 0;border-bottom:2px solid var(--bdr)"><div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Deal</div><div style="font-size:10px;font-weight:700;color:var(--muted)">Gross</div><div style="font-size:10px;font-weight:700;color:#c0392b">RedOne</div><div style="font-size:10px;font-weight:700;color:#d4820a">Ment.</div><div style="font-size:10px;font-weight:700;color:#27ae60">Vera</div></div>'+dealRows+'</div>';}).join("");
-  document.getElementById("pprofit").innerHTML='<div class="rowsb mb10"><div class="ptitle">💰 Profit Tracker</div><button class="gbtn" onclick="PROFIT.open=!PROFIT.open;PRR()">+ Deal</button></div>'+settings+addForm+yearCards+(years.length?"":'<div class="empty">No deals yet — add your first closed deal!</div>');
+  var yearCards=years.map(function(cy){var yd=yearMap[cy];
+    var dealRows=yd.deals.map(function(d){return'<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:4px;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:12px;align-items:center"><div><div style="font-weight:600">'+esc(d.client)+'</div><div style="color:var(--muted);font-size:10px">'+esc(d.date)+'</div></div><div style="color:var(--muted)">'+fmtK(d.gross)+'</div><div style="color:#c0392b">-'+fmtK(d.redOne)+'</div><div style="color:#d4820a">-'+fmtK(d.mentoring)+'</div><div style="color:#27ae60;font-weight:700">'+fmtK(d.vera)+'</div></div>';}).join("");
+    return'<div class="box mb10"><div class="rowsb mb10"><div style="font-size:15px;font-weight:700">📆 '+cy+'-'+(+cy+1)+'</div><div style="text-align:right"><div style="font-size:10px;color:var(--muted)">Take-Home</div><div style="font-size:22px;font-weight:700;color:#27ae60">'+fmt(yd.veraTotal)+'</div></div></div><div class="g3" style="margin-bottom:12px"><div style="background:var(--card2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Gross</div><div style="font-size:16px;font-weight:700">'+fmtK(yd.grossTotal)+'</div></div><div style="background:#fff0f0;border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:#c0392b;text-transform:uppercase">RedOne</div><div style="font-size:16px;font-weight:700;color:#c0392b">-'+fmtK(yd.redOneTotal)+'</div></div><div style="background:#fff8e8;border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;color:#d4820a;text-transform:uppercase">Mentoring</div><div style="font-size:16px;font-weight:700;color:#d4820a">-'+fmtK(yd.mentTotal)+'</div></div></div>'+dealRows+'</div>';
+  }).join("");
+  document.getElementById("pprofit").innerHTML='<div class="rowsb mb10"><div class="ptitle">💰 Profit</div><button class="gbtn" onclick="PROFIT.open=!PROFIT.open;PRR()">+ Deal</button></div>'+settings+addForm+yearCards+(years.length?"":'<div class="empty">No deals yet!</div>');
   save();
 }
-function PRAdd(){var sp=parseFloat((PROFIT.nd.salePrice||"").replace(/[^0-9.]/g,""));if(!PROFIT.nd.client.trim()||isNaN(sp)||sp<=0){toast("Enter client name and sale price");return;}var dateStr=PROFIT.nd.date||todayStr();var cy=getCapYear(dateStr);var capPaidSoFar=PROFIT.deals.filter(function(d){return getCapYear(d.date)===cy;}).reduce(function(s,d){return s+d.redOne;},0);var res=calcDeal(sp,PROFIT.dealsCompleted,capPaidSoFar);PROFIT.deals.push({id:"d"+Date.now(),client:PROFIT.nd.client,salePrice:sp,date:dateStr,gross:res.gross,redOne:res.redOne,mentoring:res.mentoring,vera:res.vera});PROFIT.dealsCompleted++;PROFIT.nd={client:"",salePrice:"",date:""};PROFIT.open=false;toast("Deal added! Vera earns "+fmt(res.vera)+" 🎉");PRR();}
+function PRAdd(){var sp=parseFloat((PROFIT.nd.salePrice||"").replace(/[^0-9.]/g,""));if(!PROFIT.nd.client.trim()||isNaN(sp)||sp<=0){toast("Enter client name and sale price");return;}var ds=PROFIT.nd.date||todayStr();var cy=getCapYear(ds);var capPaid=PROFIT.deals.filter(function(d){return getCapYear(d.date)===cy;}).reduce(function(s,d){return s+d.redOne;},0);var res=calcDeal(sp,PROFIT.dealsCompleted,capPaid);PROFIT.deals.push({id:"d"+Date.now(),client:PROFIT.nd.client,salePrice:sp,date:ds,gross:res.gross,redOne:res.redOne,mentoring:res.mentoring,vera:res.vera});PROFIT.dealsCompleted++;PROFIT.nd={client:"",salePrice:"",date:""};PROFIT.open=false;toast("Deal added! Vera earns "+fmt(res.vera)+" 🎉");PRR();}
 
 /* ===================== GUIDE ===================== */
 function GUIDER(){
-  document.getElementById("pguide").innerHTML='<div class="ptitle mb10">📖 How to Use RealtorVera</div>'
-  +'<div class="box amber mb10"><div style="font-size:13px;font-weight:700;color:#b06a00;margin-bottom:6px">👋 Welcome, Vera!</div><div style="font-size:13px;color:var(--muted);line-height:1.7">Your all-in-one real estate command center. Everything is connected — start with Today, work your clients, track your deals, and grow your business.</div></div>'
-  +'<div class="section">🔁 The Flow</div>'
-  +'<div class="box" style="font-size:13px;line-height:2.2;color:var(--txt)">👥 Add Client <span style="color:var(--gold)">→</span> + Pipeline <span style="color:var(--gold)">→</span> Move Stage <span style="color:var(--gold)">→</span> Auto-task in Planner <span style="color:var(--gold)">→</span> Push to Checklist <span style="color:var(--gold)">→</span> Check off ✅<br/>🤝 Add Meeting <span style="color:var(--gold)">→</span> Auto-appears in Planner + Today Screen<br/>🎓 Add Training <span style="color:var(--gold)">→</span> Auto-appears in Planner + Today Screen<br/>💰 Close a Deal <span style="color:var(--gold)">→</span> Profit auto-calculated by year</div>'
-  +'<div class="section">📋 Tab Guide</div>'
-  +'<div class="box"><div style="font-size:13px;line-height:2.2">🏠 <strong>Today</strong> — Your daily command center. Urgent alerts, meetings, tasks<br/>📅 <strong>Planner</strong> — Weekly view. Auto-populated from meetings & pipeline<br/>✅ <strong>Checklist</strong> — Daily to-do. Push tasks from Planner<br/>👥 <strong>Clients</strong> — All contacts with notes & follow-up tracking<br/>🤝 <strong>Meetings</strong> — Client, builder & lender meetings<br/>🎓 <strong>Trainings</strong> — Track all training & certifications<br/>📱 <strong>Content</strong> — Social media calendar<br/>📊 <strong>Pipeline</strong> — Lead stages & deal tracking<br/>🏗️ <strong>Builds</strong> — New build communities<br/>🏦 <strong>Lenders</strong> — Lender contacts with phone & email<br/>💰 <strong>Profit</strong> — Commission breakdown by year</div></div>'
-  +'<div style="text-align:center;margin-top:20px"><button class="gbtn" onclick="goTab(\'today\')">Go to Today ☀️</button></div>';
+  document.getElementById("pguide").innerHTML='<div class="ptitle mb10">📖 Guide</div>'
+    +'<div class="box amber mb10"><div style="font-size:13px;font-weight:700;color:#b06a00;margin-bottom:6px">👋 Welcome, Vera!</div><div style="font-size:13px;color:var(--muted);line-height:1.7">Your all-in-one real estate command center. Two core tabs drive your day.</div></div>'
+    +'<div class="box mb10"><div style="font-size:14px;font-weight:700;margin-bottom:8px">🏠 Today = <span style="color:var(--gold)">Read your day</span></div><div style="font-size:13px;color:var(--muted);line-height:1.7">Open every morning. See urgent alerts, today\'s meetings, tasks, checklist progress and what\'s coming this week. Read only — no adding here.</div></div>'
+    +'<div class="box mb10"><div style="font-size:14px;font-weight:700;margin-bottom:8px">📅 Planner = <span style="color:var(--gold)">Run your day</span></div><div style="font-size:13px;color:var(--muted);line-height:1.7">Tap any day → add meetings, tasks, trainings or checklist items. Pick meetings from your saved Clients, Builders or Lenders list. Checklist lives here too.</div></div>'
+    +'<div class="box mb10"><div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px">Quick Add Flow:</div><div style="font-size:13px;color:var(--txt);line-height:2.2">1. Tap a <strong>day</strong> in the Planner grid<br/>2. Choose type: Task / Meeting / Training / Checklist<br/>3. Fill minimum fields (date already set!)<br/>4. Tap Save ✓</div></div>'
+    +'<div class="box mb10"><div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px">Schedule from a Client:</div><div style="font-size:13px;color:var(--txt);line-height:2.2">1. Go to 👥 Clients<br/>2. Tap <strong>📅 Schedule</strong> on any client card<br/>3. Goes straight to Planner with client pre-filled<br/>4. Just pick day and time</div></div>'
+    +'<div style="text-align:center;margin-top:16px"><button class="gbtn" onclick="goTab(\'today\')">Open Today ☀️</button></div>';
 }
 
 /* ===================== SAVE / LOAD ===================== */
 function save(){
-  try{localStorage.setItem("vpl",JSON.stringify(PL.tasks));}catch(e){}
-  try{localStorage.setItem("vcl",JSON.stringify(CL.items));}catch(e){}
-  try{localStorage.setItem("vcli",JSON.stringify(CLI.data));}catch(e){}
-  try{localStorage.setItem("vclin",JSON.stringify(CLI.notes));}catch(e){}
-  try{localStorage.setItem("vcon",JSON.stringify(CON.posts));}catch(e){}
-  try{localStorage.setItem("vpip",JSON.stringify(PIP.data));}catch(e){}
-  try{localStorage.setItem("vbld",JSON.stringify(BLD.data));}catch(e){}
-  try{localStorage.setItem("vmtg",JSON.stringify(MTG.data));}catch(e){}
-  try{localStorage.setItem("vtrn",JSON.stringify(TRN.data));}catch(e){}
-  try{localStorage.setItem("vlnd",JSON.stringify(LND.data));}catch(e){}
-  try{localStorage.setItem("vprofit",JSON.stringify({inMentoring:PROFIT.inMentoring,dealsCompleted:PROFIT.dealsCompleted,deals:PROFIT.deals}));}catch(e){}
+  try{localStorage.setItem("v4_items",JSON.stringify(ITEMS));}catch(e){}
+  try{localStorage.setItem("v4_cl",JSON.stringify(CHECKLIST));}catch(e){}
+  try{localStorage.setItem("v4_cli",JSON.stringify(CLI.data));}catch(e){}
+  try{localStorage.setItem("v4_clin",JSON.stringify(CLI.notes));}catch(e){}
+  try{localStorage.setItem("v4_con",JSON.stringify(CON.posts));}catch(e){}
+  try{localStorage.setItem("v4_pip",JSON.stringify(PIP.data));}catch(e){}
+  try{localStorage.setItem("v4_bld",JSON.stringify(BLD.data));}catch(e){}
+  try{localStorage.setItem("v4_lnd",JSON.stringify(LND.data));}catch(e){}
+  try{localStorage.setItem("v4_profit",JSON.stringify({inMentoring:PROFIT.inMentoring,dealsCompleted:PROFIT.dealsCompleted,deals:PROFIT.deals}));}catch(e){}
 }
 function load(){
-  try{var a=localStorage.getItem("vpl");if(a)PL.tasks=JSON.parse(a);}catch(e){}
-  try{var b=localStorage.getItem("vcl");if(b)CL.items=JSON.parse(b);}catch(e){}
-  try{var c=localStorage.getItem("vcli");if(c)CLI.data=JSON.parse(c);}catch(e){}
-  try{var cn=localStorage.getItem("vclin");if(cn)CLI.notes=JSON.parse(cn);}catch(e){}
-  try{var d=localStorage.getItem("vcon");if(d)CON.posts=JSON.parse(d);}catch(e){}
-  try{var e=localStorage.getItem("vpip");if(e)PIP.data=JSON.parse(e);}catch(e2){}
-  try{var f=localStorage.getItem("vbld");if(f)BLD.data=JSON.parse(f);}catch(e){}
-  try{var g=localStorage.getItem("vmtg");if(g)MTG.data=JSON.parse(g);}catch(e){}
-  try{var h=localStorage.getItem("vtrn");if(h)TRN.data=JSON.parse(h);}catch(e){}
-  try{var ii=localStorage.getItem("vlnd");if(ii)LND.data=JSON.parse(ii);}catch(e){}
-  try{var j=localStorage.getItem("vprofit");if(j){var jp=JSON.parse(j);PROFIT.inMentoring=jp.inMentoring;PROFIT.dealsCompleted=jp.dealsCompleted;PROFIT.deals=jp.deals;}}catch(e){}
+  try{var a=localStorage.getItem("v4_items");if(a)ITEMS=JSON.parse(a);}catch(e){}
+  try{var b=localStorage.getItem("v4_cl");if(b)CHECKLIST=JSON.parse(b);}catch(e){}
+  try{var c=localStorage.getItem("v4_cli");if(c)CLI.data=JSON.parse(c);}catch(e){}
+  try{var cn=localStorage.getItem("v4_clin");if(cn)CLI.notes=JSON.parse(cn);}catch(e){}
+  try{var d=localStorage.getItem("v4_con");if(d)CON.posts=JSON.parse(d);}catch(e){}
+  try{var e=localStorage.getItem("v4_pip");if(e)PIP.data=JSON.parse(e);}catch(e2){}
+  try{var f=localStorage.getItem("v4_bld");if(f)BLD.data=JSON.parse(f);}catch(e){}
+  try{var g=localStorage.getItem("v4_lnd");if(g)LND.data=JSON.parse(g);}catch(e){}
+  try{var h=localStorage.getItem("v4_profit");if(h){var hp=JSON.parse(h);PROFIT.inMentoring=hp.inMentoring;PROFIT.dealsCompleted=hp.dealsCompleted;PROFIT.deals=hp.deals;}}catch(e){}
 }
-
-/* ===================== ARROW KEYS ===================== */
-document.addEventListener("keydown",function(ev){
-  if(["INPUT","TEXTAREA","SELECT"].indexOf(ev.target.tagName)>-1)return;
-  if(ev.key==="ArrowLeft"){ev.preventDefault();if(ACTIVE==="planner")PLP();else if(ACTIVE==="checklist")CLP();else if(ACTIVE==="content")CONP();}
-  if(ev.key==="ArrowRight"){ev.preventDefault();if(ACTIVE==="planner")PLN();else if(ACTIVE==="checklist")CLN();else if(ACTIVE==="content")CONN();}
-});
 
 /* ===================== INIT ===================== */
 load();
-TODAYR();PLR();CLR();CLIR();MTGR();TRNR();CONR();PIPR();BLDR();LNDR();PRR();GUIDER();
-// refresh today every 60 seconds
+TODAYR();PLR();CLIR();PIPR();CONR();BLDR();LNDR();PRR();GUIDER();
 setInterval(function(){if(ACTIVE==="today")TODAYR();updateAlertBell();},60000);
 updateAlertBell();
 </script>

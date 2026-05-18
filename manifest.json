@@ -1,0 +1,25 @@
+{
+  "name": "RealtorVera Command Center",
+  "short_name": "RealtorVera",
+  "description": "Vera Adegoke Real Estate Dashboard",
+  "start_url": "/RealtorVeraDashboard/",
+  "scope": "/RealtorVeraDashboard/",
+  "display": "standalone",
+  "background_color": "#f5f5f0",
+  "theme_color": "#c47f00",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

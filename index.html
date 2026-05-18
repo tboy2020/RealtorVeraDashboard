@@ -4,6 +4,11 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>RealtorVera · Command Center</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#c47f00"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="RealtorVera"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--bg:#f5f5f0;--card:#fff;--card2:#f0efea;--bdr:#e0ddd5;--bdr2:#d0cdc5;--txt:#1a1a1a;--muted:#888;--dim:#bbb;--gold:#c47f00;--green:#2e7d32;--blue:#1565c0;--red:#c62828;--purple:#6a1b9a}
@@ -216,6 +221,19 @@ function parseTime(s){
   var h12=h%12||12;
   return h12+":"+mn+" "+suffix;
 }
+function timeToMins(s){
+  if(!s)return 9999;
+  var m=s.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if(!m)return 9999;
+  var h=parseInt(m[1]),mn=parseInt(m[2]),ap=m[3].toUpperCase();
+  if(ap==="PM"&&h<12)h+=12;
+  if(ap==="AM"&&h===12)h=0;
+  return h*60+mn;
+}
+function fmtTimeRange(from,to){
+  if(!from)return"";
+  return to?from+" – "+to:from;
+}
 
 function toast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2800);}
 
@@ -253,7 +271,7 @@ function itemIcon(type){
 }
 
 /* ===================== DATA STORES ===================== */
-// All planner items: {id, type:"meeting"|"training"|"task", date, time, title, desc, tag, done, meetingType, linkedTo}
+// All planner items: {id, type, date, time, timeTo, title, desc, tag, done, meetingType, linkedTo, linkedTo2, editing}
 var ITEMS=[];
 // Checklist items per day: {date: [{id,task,done}]}
 var CHECKLIST={};
@@ -443,14 +461,15 @@ function TODAYR(){
 }
 
 /* ===================== PLANNER (unified) ===================== */
-var PL={ws:sow(TODAY),sel:fk(TODAY),qaOpen:false,qaType:"task",qaWho:"",qaWhoType:"client",qaTime:"",qaTitle:"",qaDesc:"",qaTag:"client"};
+var PL={ws:sow(TODAY),sel:fk(TODAY),qaOpen:false,qaType:"task",qaWho:"",qaWhoType:"client",qaWho2:"",qaWho2Type:"",qaTime:"",qaTimeTo:"",qaShowTimeTo:false,qaTitle:"",qaDesc:"",qaTag:"client",
+  editId:null,editTime:"",editTimeTo:"",editShowTimeTo:false,editTitle:"",editDesc:"",editWho:"",editWho2:""};
 
 function PLgetSelDate(){for(var i=0;i<7;i++){var d=addD(PL.ws,i);if(fk(d)===PL.sel)return d;}return TODAY;}
 
 function PLdayItems(k){
   return ITEMS.filter(function(x){return x.date===k;}).sort(function(a,b){
-    var ta=a.time||"99:99",tb=b.time||"99:99";
-    return ta.localeCompare(tb);
+    var ta=timeToMins(a.time),tb=timeToMins(b.time);
+    return ta-tb;
   });
 }
 
@@ -496,47 +515,68 @@ function PLR(){
     +'<div class="qa-type-btn'+(PL.qaType==="checklist"?" on":"")+'" onclick="PLsetQA(\'checklist\')">✅ Checklist</div>'
     +'</div>';
 
+  // time input helper (from + optional to)
+  function timeInputs(fromVal,toVal,showTo,onChangeFrom,onChangeTo,onToggleTo){
+    var html='<div class="row" style="flex-wrap:wrap;gap:8px;align-items:center">'
+      +'<input class="inp" style="width:110px" placeholder="From e.g. 10am" value="'+esc(fromVal)+'" oninput="'+onChangeFrom+'"/>';
+    if(showTo){
+      html+='<span style="color:var(--muted);font-size:13px">→</span>'
+        +'<input class="inp" style="width:110px" placeholder="To e.g. 12pm" value="'+esc(toVal)+'" oninput="'+onChangeTo+'"/>'
+        +'<button class="sbtn sml" onclick="'+onToggleTo+'">✕ End</button>';
+    } else {
+      html+='<button class="sbtn sml" onclick="'+onToggleTo+'">+ End time</button>';
+    }
+    html+='</div>';
+    return html;
+  }
+
   var qaForm="";
   if(PL.qaOpen){
+    var timeRow=timeInputs(PL.qaTime,PL.qaTimeTo,PL.qaShowTimeTo,"PL.qaTime=this.value","PL.qaTimeTo=this.value","PL.qaShowTimeTo=!PL.qaShowTimeTo;PLR()");
     if(PL.qaType==="task"){
       var tagOpts=Object.keys(TAGS).map(function(t){return'<option value="'+t+'"'+(PL.qaTag===t?" selected":"")+'>'+TAGS[t].l+'</option>';}).join("");
-      qaForm='<div class="g2">'
-        +'<input class="inp" placeholder="Task title *" oninput="PL.qaTitle=this.value" value="'+esc(PL.qaTitle)+'"/>'
-        +'<input class="inp" placeholder="Time e.g. 10am (optional)" oninput="PL.qaTime=this.value" value="'+esc(PL.qaTime)+'"/>'
-        +'</div>'
+      qaForm='<div class="mb8">'+timeRow+'</div>'
         +'<div class="g2">'
-        +'<input class="inp" placeholder="Description (optional)" oninput="PL.qaDesc=this.value" value="'+esc(PL.qaDesc)+'"/>'
+        +'<input class="inp" placeholder="Task title *" oninput="PL.qaTitle=this.value" value="'+esc(PL.qaTitle)+'"/>'
         +'<select class="inp" onchange="PL.qaTag=this.value">'+tagOpts+'</select>'
-        +'</div>';
+        +'</div>'
+        +'<input class="inp mb8" placeholder="Description (optional)" oninput="PL.qaDesc=this.value" value="'+esc(PL.qaDesc)+'"/>';
     } else if(PL.qaType==="meeting"){
       var whoTypeOpts=['client','builder','lender','other'].map(function(t){return'<option value="'+t+'"'+(PL.qaWhoType===t?" selected":"")+'>'+t.charAt(0).toUpperCase()+t.slice(1)+'</option>';}).join("");
-      // who options based on type
-      var whoOpts='<option value="">-- Select --</option>';
-      if(PL.qaWhoType==="client")whoOpts+=CLI.data.map(function(c){return'<option value="'+esc(c.name)+'"'+(PL.qaWho===c.name?" selected":"")+'>'+esc(c.name)+'</option>';}).join("");
-      else if(PL.qaWhoType==="builder")whoOpts+=BLD.data.map(function(b){return'<option value="'+esc(b.community)+'"'+(PL.qaWho===b.community?" selected":"")+'>'+esc(b.community)+'</option>';}).join("");
-      else if(PL.qaWhoType==="lender")whoOpts+=LND.data.map(function(l){return'<option value="'+esc(l.name)+'"'+(PL.qaWho===l.name?" selected":"")+'>'+esc(l.name)+' - '+esc(l.company)+'</option>';}).join("");
-      qaForm='<div class="g2">'
+      function whoOptsFor(type,cur){
+        var o='<option value="">-- Select --</option>';
+        if(type==="client")o+=CLI.data.map(function(c){return'<option value="'+esc(c.name)+'"'+(cur===c.name?" selected":"")+'>'+esc(c.name)+'</option>';}).join("");
+        else if(type==="builder")o+=BLD.data.map(function(b){return'<option value="'+esc(b.community)+'"'+(cur===b.community?" selected":"")+'>'+esc(b.community)+'</option>';}).join("");
+        else if(type==="lender")o+=LND.data.map(function(l){return'<option value="'+esc(l.name)+'"'+(cur===l.name?" selected":"")+'>'+esc(l.name)+'</option>';}).join("");
+        return o;
+      }
+      // second party type options (builder/lender/other, no client repeat)
+      var who2TypeOpts=['','builder','lender','other'].map(function(t){return'<option value="'+t+'"'+(PL.qaWho2Type===t?" selected":"")+'>'+(!t?"-- Also involve (optional) --":t.charAt(0).toUpperCase()+t.slice(1))+'</option>';}).join("");
+      var who2Input=PL.qaWho2Type&&PL.qaWho2Type!=="other"
+        ?'<select class="inp" onchange="PL.qaWho2=this.value">'+whoOptsFor(PL.qaWho2Type,PL.qaWho2)+'</select>'
+        :(PL.qaWho2Type==="other"?'<input class="inp" placeholder="Name / company" oninput="PL.qaWho2=this.value" value="'+esc(PL.qaWho2)+'"/>':"");
+      qaForm='<div class="mb8">'+timeRow+'</div>'
+        +'<div class="g2">'
         +'<select class="inp" onchange="PL.qaWhoType=this.value;PL.qaWho=\'\';PLR()">'+whoTypeOpts+'</select>'
         +(PL.qaWhoType==="other"
           ?'<input class="inp" placeholder="Who / Title *" oninput="PL.qaWho=this.value" value="'+esc(PL.qaWho)+'"/>'
-          :'<select class="inp" onchange="PL.qaWho=this.value">'+whoOpts+'</select>')
+          :'<select class="inp" onchange="PL.qaWho=this.value">'+whoOptsFor(PL.qaWhoType,PL.qaWho)+'</select>')
         +'</div>'
-        +'<div class="g2">'
-        +'<input class="inp" placeholder="Time e.g. 10am *" oninput="PL.qaTime=this.value" value="'+esc(PL.qaTime)+'"/>'
-        +'<input class="inp" placeholder="Location (optional)" oninput="PL.qaDesc=this.value" value="'+esc(PL.qaDesc)+'"/>'
-        +'</div>';
+        +'<div class="g2 mb8">'
+        +'<select class="inp" onchange="PL.qaWho2Type=this.value;PL.qaWho2=\'\';PLR()">'+who2TypeOpts+'</select>'
+        +who2Input
+        +'</div>'
+        +'<input class="inp mb8" placeholder="Location (optional)" oninput="PL.qaDesc=this.value" value="'+esc(PL.qaDesc)+'"/>';
     } else if(PL.qaType==="training"){
-      var bldOpts='<option value="">-- Select builder or type freely --</option>'+BLD.data.map(function(b){return'<option value="'+esc(b.community)+'">'+esc(b.community)+'</option>';}).join("");
-      qaForm='<div class="g2">'
-        +'<input class="inp" placeholder="Training title *" oninput="PL.qaTitle=this.value" value="'+esc(PL.qaTitle)+'"/>'
-        +'<input class="inp" placeholder="Time e.g. 9am" oninput="PL.qaTime=this.value" value="'+esc(PL.qaTime)+'"/>'
-        +'</div>'
+      var bldOpts='<option value="">-- Select builder or type below --</option>'+BLD.data.map(function(b){return'<option value="'+esc(b.community)+'">'+esc(b.community)+'</option>';}).join("");
+      qaForm='<div class="mb8">'+timeRow+'</div>'
         +'<div class="g2">'
+        +'<input class="inp" placeholder="Training title *" oninput="PL.qaTitle=this.value" value="'+esc(PL.qaTitle)+'"/>'
         +'<select class="inp" onchange="if(this.value)PL.qaDesc=this.value">'+bldOpts+'</select>'
-        +'<input class="inp" placeholder="Location (optional)" oninput="PL.qaDesc=this.value" value="'+esc(PL.qaDesc)+'"/>'
-        +'</div>';
+        +'</div>'
+        +'<input class="inp mb8" placeholder="Location (optional)" oninput="PL.qaDesc=this.value" value="'+esc(PL.qaDesc)+'"/>';
     } else if(PL.qaType==="checklist"){
-      qaForm='<input class="inp" placeholder="Task to check off today *" oninput="PL.qaTitle=this.value" value="'+esc(PL.qaTitle)+'"/>';
+      qaForm='<input class="inp" placeholder="Task to check off *" oninput="PL.qaTitle=this.value" value="'+esc(PL.qaTitle)+'"/>';
     }
   }
 
@@ -545,39 +585,57 @@ function PLR(){
     +(PL.qaOpen
       ?'<div style="margin-bottom:10px">'+qaForm+'</div>'
        +'<div class="row"><button class="gbtn" onclick="PLsave()">Save</button><button class="sbtn" onclick="PL.qaOpen=false;PLR()">Cancel</button></div>'
-      :'<button class="gbtn" style="width:100%" onclick="PL.qaOpen=true;PLR()">+ Add '+PL.qaType.charAt(0).toUpperCase()+PL.qaType.slice(1)+' on '+DN[sd.getDay()]+'</button>')
+      :'<button class="gbtn" style="width:100%" onclick="PL.qaOpen=true;PLR()">+ Add to '+DN[sd.getDay()]+'</button>')
     +'</div>';
 
-  // scheduled items
+  // scheduled items — with edit support
+  function renderItem(x){
+    // inline edit mode
+    if(PL.editId===x.id){
+      var eTimeRow=('<div class="row mb8" style="flex-wrap:wrap;gap:8px;align-items:center">'
+        +'<input class="inp" style="width:110px" placeholder="From" value="'+esc(PL.editTime)+'" oninput="PL.editTime=this.value"/>'
+        +(PL.editShowTimeTo
+          ?'<span style="color:var(--muted)">→</span>'
+           +'<input class="inp" style="width:110px" placeholder="To" value="'+esc(PL.editTimeTo)+'" oninput="PL.editTimeTo=this.value"/>'
+           +'<button class="sbtn sml" onclick="PL.editShowTimeTo=false;PLR()">✕</button>'
+          :'<button class="sbtn sml" onclick="PL.editShowTimeTo=true;PLR()">+ End</button>')
+        +'</div>');
+      return'<div class="srow" style="flex-direction:column;align-items:stretch;gap:8px">'
+        +eTimeRow
+        +'<input class="inp mb8" placeholder="Title" value="'+esc(PL.editTitle)+'" oninput="PL.editTitle=this.value"/>'
+        +'<input class="inp mb8" placeholder="Location / description" value="'+esc(PL.editDesc)+'" oninput="PL.editDesc=this.value"/>'
+        +(x.linkedTo?'<input class="inp mb8" placeholder="Primary party" value="'+esc(PL.editWho)+'" oninput="PL.editWho=this.value"/>':"")
+        +(x.linkedTo2!==undefined?'<input class="inp mb8" placeholder="Also involving (optional)" value="'+esc(PL.editWho2)+'" oninput="PL.editWho2=this.value"/>':"")
+        +'<div class="row"><button class="gbtn" onclick="PLsaveEdit(\''+x.id+'\')">Save</button><button class="sbtn" onclick="PL.editId=null;PLR()">Cancel</button></div>'
+        +'</div>';
+    }
+    var timeDisplay=fmtTimeRange(x.time,x.timeTo);
+    return'<div class="srow">'
+      +'<div class="stime">'+esc(timeDisplay||"—")+'</div>'
+      +'<div class="sicon">'+itemIcon(x.type)+'</div>'
+      +'<div class="sinfo"><div class="stitle'+(x.done?" done":"")+'">'+esc(x.title)+(x.tag?tagBadge(x.tag):"")+'</div>'
+      +(x.desc?'<div class="ssub">'+esc(x.desc)+'</div>':"")
+      +((x.linkedTo||x.linkedTo2)?'<div class="ssub">'+[x.linkedTo,x.linkedTo2].filter(Boolean).map(function(s){return esc(s);}).join(" + ")+'</div>':"")
+      +'</div>'
+      +'<div class="row" style="gap:4px;flex-wrap:wrap;justify-content:flex-end">'
+      +'<div class="tick'+(x.done?" on":"")+'" onclick="PLtoggle(\''+x.id+'\')">'+(x.done?"&#10003;":"")+'</div>'
+      +'<button class="sbtn sml" onclick="addToGCal(\''+x.id+'\')" title="Add to Google Calendar">📅</button>'
+      +'<button class="sbtn sml" onclick="PLstartEdit(\''+x.id+'\')">Edit</button>'
+      +'<button class="xbtn" onclick="PLdel(\''+x.id+'\')">&#10005;</button>'
+      +'</div></div>';
+  }
+
   var scheduled=dayItems.filter(function(x){return x.type!=="task"||x.time;});
   var unscheduled=dayItems.filter(function(x){return x.type==="task"&&!x.time;});
 
-  var schedHtml=scheduled.length?scheduled.map(function(x){
-    return'<div class="srow">'
-      +'<div class="stime">'+esc(x.time||"—")+'</div>'
-      +'<div class="sicon">'+itemIcon(x.type)+'</div>'
-      +'<div class="sinfo"><div class="stitle'+(x.done?" done":"")+'">'+esc(x.title)+(x.tag?tagBadge(x.tag):"")+'</div>'
-      +(x.desc?'<div class="ssub">'+esc(x.desc)+'</div>':"")+'</div>'
-      +'<div class="row" style="gap:4px">'
-      +'<div class="tick'+(x.done?" on":"")+'" onclick="PLtoggle(\''+x.id+'\')">'+(x.done?"&#10003;":"")+'</div>'
-      +'<button class="xbtn" onclick="PLdel(\''+x.id+'\')">&#10005;</button>'
-      +'</div></div>';
-  }).join(""):'';
-
-  var unschedHtml=unscheduled.length?unscheduled.map(function(x){
-    return'<div class="srow">'
-      +'<div class="stime" style="color:var(--dim)">—</div>'
-      +'<div class="sicon">📌</div>'
-      +'<div class="sinfo"><div class="stitle'+(x.done?" done":"")+'">'+esc(x.title)+(x.tag?tagBadge(x.tag):"")+'</div>'
-      +(x.desc?'<div class="ssub">'+esc(x.desc)+'</div>':"")+'</div>'
-      +'<div class="row" style="gap:4px">'
-      +'<div class="tick'+(x.done?" on":"")+'" onclick="PLtoggle(\''+x.id+'\')">'+(x.done?"&#10003;":"")+'</div>'
-      +'<button class="xbtn" onclick="PLdel(\''+x.id+'\')">&#10005;</button>'
-      +'</div></div>';
-  }).join(""):'';
+  var schedHtml=scheduled.length?scheduled.map(renderItem).join(""):"";
+  var unschedHtml=unscheduled.length
+    ?'<div style="font-size:11px;color:var(--muted);padding:8px 0 4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Unscheduled</div>'
+     +unscheduled.map(renderItem).join("")
+    :"";
 
   var schedSection=(scheduled.length||unscheduled.length)
-    ?'<div class="box">'+(schedHtml||"")+(unscheduled.length?'<div style="font-size:11px;color:var(--muted);padding:8px 0 4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Unscheduled</div>':"")+unschedHtml+'</div>'
+    ?'<div class="section">📋 Schedule</div><div class="box">'+schedHtml+unschedHtml+'</div>'
     :'';
 
   // checklist section
@@ -603,8 +661,8 @@ function PLR(){
   save();
 }
 
-function PLsetQA(type){PL.qaType=type;PL.qaOpen=true;PL.qaTitle="";PL.qaTime="";PL.qaDesc="";PL.qaWho="";PL.qaTag="client";PLR();}
-function PLS(k){PL.sel=k;PL.qaOpen=false;PLR();}
+function PLsetQA(type){PL.qaType=type;PL.qaOpen=true;PL.qaTitle="";PL.qaTime="";PL.qaTimeTo="";PL.qaShowTimeTo=false;PL.qaDesc="";PL.qaWho="";PL.qaWho2="";PL.qaWho2Type="";PL.qaTag="client";PLR();}
+function PLS(k){PL.sel=k;PL.qaOpen=false;PL.editId=null;PLR();}
 function PLP(){PL.ws=addD(PL.ws,-7);var p=PL.sel.split("-");var d=new Date();d.setFullYear(+p[0]);d.setMonth(+p[1]);d.setDate(+p[2]);PL.sel=fk(addD(d,-7));PLR();}
 function PLN(){PL.ws=addD(PL.ws,7);var p=PL.sel.split("-");var d=new Date();d.setFullYear(+p[0]);d.setMonth(+p[1]);d.setDate(+p[2]);PL.sel=fk(addD(d,7));PLR();}
 function PLtoggle(id){var x=ITEMS.find(function(i){return i.id===id;});if(x)x.done=!x.done;PLR();if(ACTIVE==="today")TODAYR();}
@@ -612,8 +670,35 @@ function PLdel(id){ITEMS=ITEMS.filter(function(i){return i.id!==id;});PLR();}
 function CLtick(k,id){var cl=CHECKLIST[k]||[];var t=cl.find(function(x){return x.id===id;});if(t)t.done=!t.done;PLR();if(ACTIVE==="today")TODAYR();}
 function CLdel(k,id){if(CHECKLIST[k])CHECKLIST[k]=CHECKLIST[k].filter(function(x){return x.id!==id;});PLR();}
 
+function PLstartEdit(id){
+  var x=ITEMS.find(function(i){return i.id===id;});if(!x)return;
+  PL.editId=id;
+  PL.editTime=x.time||"";
+  PL.editTimeTo=x.timeTo||"";
+  PL.editShowTimeTo=!!(x.timeTo);
+  PL.editTitle=x.title||"";
+  PL.editDesc=x.desc||"";
+  PL.editWho=x.linkedTo||"";
+  PL.editWho2=x.linkedTo2||"";
+  PL.qaOpen=false;
+  PLR();
+}
+function PLsaveEdit(id){
+  var x=ITEMS.find(function(i){return i.id===id;});if(!x)return;
+  x.time=parseTime(PL.editTime);
+  x.timeTo=PL.editShowTimeTo?parseTime(PL.editTimeTo):"";
+  x.title=PL.editTitle||x.title;
+  x.desc=PL.editDesc;
+  if(x.linkedTo!==undefined)x.linkedTo=PL.editWho;
+  if(x.linkedTo2!==undefined)x.linkedTo2=PL.editWho2;
+  PL.editId=null;
+  PLR();save();toast("Updated ✅");
+}
+
 function PLsave(){
   var k=PL.sel;
+  var fromTime=parseTime(PL.qaTime);
+  var toTime=PL.qaShowTimeTo?parseTime(PL.qaTimeTo):"";
   if(PL.qaType==="checklist"){
     if(!PL.qaTitle.trim()){toast("Please enter a task");return;}
     if(!CHECKLIST[k])CHECKLIST[k]=[];
@@ -621,22 +706,23 @@ function PLsave(){
     toast("Added to checklist ✅");
   } else if(PL.qaType==="task"){
     if(!PL.qaTitle.trim()){toast("Please enter a title");return;}
-    ITEMS.push({id:"i"+Date.now(),type:"task",date:k,time:parseTime(PL.qaTime),title:PL.qaTitle,desc:PL.qaDesc,tag:PL.qaTag,done:false});
+    ITEMS.push({id:"i"+Date.now(),type:"task",date:k,time:fromTime,timeTo:toTime,title:PL.qaTitle,desc:PL.qaDesc,tag:PL.qaTag,done:false});
     toast("Task added ✅");
   } else if(PL.qaType==="meeting"){
     var who=PL.qaWho.trim();
     if(!who){toast("Please select or enter who");return;}
-    if(!PL.qaTime.trim()){toast("Please enter a time");return;}
+    if(!fromTime){toast("Please enter a time");return;}
     var mType=PL.qaWhoType==="client"?"Client Meeting":PL.qaWhoType==="builder"?"Builder Meeting":PL.qaWhoType==="lender"?"Lender Meeting":"Other";
-    var title="Meeting with "+who;
-    ITEMS.push({id:"i"+Date.now(),type:"meeting",date:k,time:parseTime(PL.qaTime),title:title,desc:PL.qaDesc,tag:"meeting",meetingType:mType,linkedTo:who,done:false});
+    var parts=[who,PL.qaWho2].filter(Boolean);
+    var title="Meeting with "+parts.join(" & ");
+    ITEMS.push({id:"i"+Date.now(),type:"meeting",date:k,time:fromTime,timeTo:toTime,title:title,desc:PL.qaDesc,tag:"meeting",meetingType:mType,linkedTo:who,linkedTo2:PL.qaWho2||"",done:false});
     toast("Meeting added ✅");
   } else if(PL.qaType==="training"){
     if(!PL.qaTitle.trim()){toast("Please enter a title");return;}
-    ITEMS.push({id:"i"+Date.now(),type:"training",date:k,time:parseTime(PL.qaTime),title:PL.qaTitle,desc:PL.qaDesc,tag:"training",done:false});
+    ITEMS.push({id:"i"+Date.now(),type:"training",date:k,time:fromTime,timeTo:toTime,title:PL.qaTitle,desc:PL.qaDesc,tag:"training",done:false});
     toast("Training added ✅");
   }
-  PL.qaOpen=false;PL.qaTitle="";PL.qaTime="";PL.qaDesc="";PL.qaWho="";
+  PL.qaOpen=false;PL.qaTitle="";PL.qaTime="";PL.qaTimeTo="";PL.qaShowTimeTo=false;PL.qaDesc="";PL.qaWho="";PL.qaWho2="";PL.qaWho2Type="";
   PLR();if(ACTIVE==="today")TODAYR();
 }
 
@@ -851,7 +937,145 @@ function GUIDER(){
     +'<div style="text-align:center;margin-top:16px"><button class="gbtn" onclick="goTab(\'today\')">Open Today ☀️</button></div>';
 }
 
-/* ===================== SAVE / LOAD ===================== */
+/* ===================== NOTIFICATIONS ===================== */
+var NOTIF_KEY="vera_notified";
+
+function getNotifLog(){
+  try{var n=localStorage.getItem(NOTIF_KEY);return n?JSON.parse(n):{};} catch(e){return{};}
+}
+function setNotifLog(log){
+  try{localStorage.setItem(NOTIF_KEY,JSON.stringify(log));}catch(e){}
+}
+
+function sendNotif(title,body,tag){
+  if(!('Notification' in window)||Notification.permission!=='granted')return;
+  try{
+    new Notification(title,{
+      body:body,
+      icon:'icon-192.png',
+      tag:tag,
+      badge:'icon-192.png'
+    });
+  }catch(e){}
+}
+
+function checkUpcomingNotifs(){
+  if(!('Notification' in window)||Notification.permission!=='granted')return;
+  var log=getNotifLog();
+  var now=new Date();
+  var todayS=todayStr();
+
+  // get all items for today and next 7 days
+  var upcoming=ITEMS.filter(function(x){
+    return x.date>=todayS&&!x.done;
+  });
+  // also checklist items for today
+  var clItems=(CHECKLIST[todayS]||[]).filter(function(x){return !x.done;});
+
+  upcoming.forEach(function(x){
+    if(!x.time)return;
+    // parse item datetime
+    var itemDate=new Date(x.date+"T00:00:00");
+    var m=x.time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if(!m)return;
+    var h=parseInt(m[1]),mn=parseInt(m[2]),ap=m[3].toUpperCase();
+    if(ap==="PM"&&h<12)h+=12;
+    if(ap==="AM"&&h===12)h=0;
+    itemDate.setHours(h,mn,0,0);
+
+    var diffMins=Math.round((itemDate-now)/60000);
+    var icon=x.type==="meeting"?"🤝":x.type==="training"?"🎓":"📌";
+
+    // Morning of (7am on the day)
+    var morningKey=x.id+"_morning_"+x.date;
+    if(x.date===todayS&&!log[morningKey]){
+      var morning=new Date(x.date+"T07:00:00");
+      if(now>=morning&&now<new Date(x.date+"T07:10:00")){
+        sendNotif("Good Morning! Today's Schedule",icon+" "+x.title+(x.time?" at "+x.time:""),morningKey);
+        log[morningKey]=1;
+      }
+    }
+
+    // 1 hour before
+    var hrKey=x.id+"_1hr";
+    if(!log[hrKey]&&diffMins>=55&&diffMins<=65){
+      sendNotif("In 1 Hour — "+icon+" "+x.title,"Starting at "+x.time+(x.desc?" · "+x.desc:""),hrKey);
+      log[hrKey]=1;
+    }
+
+    // 15 mins before
+    var minKey=x.id+"_15min";
+    if(!log[minKey]&&diffMins>=12&&diffMins<=17){
+      sendNotif("Starting Soon — "+icon+" "+x.title,"In 15 minutes · "+x.time+(x.desc?" · "+x.desc:""),minKey);
+      log[minKey]=1;
+    }
+  });
+
+  // morning checklist summary
+  var clMorningKey="checklist_morning_"+todayS;
+  if(clItems.length&&!log[clMorningKey]){
+    var morning=new Date(todayS+"T07:00:00");
+    if(now>=morning&&now<new Date(todayS+"T07:10:00")){
+      sendNotif("Today's Checklist — "+clItems.length+" items",clItems.slice(0,3).map(function(t){return"☐ "+t.task;}).join("\n"),clMorningKey);
+      log[clMorningKey]=1;
+    }
+  }
+
+  setNotifLog(log);
+}
+
+/* ===================== GOOGLE CALENDAR EXPORT ===================== */
+function toGCalDate(dateStr,timeStr){
+  // returns YYYYMMDDTHHMMSS format
+  if(!timeStr)return dateStr.replace(/-/g,"");
+  var m=timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if(!m)return dateStr.replace(/-/g,"");
+  var h=parseInt(m[1]),mn=parseInt(m[2]),ap=m[3].toUpperCase();
+  if(ap==="PM"&&h<12)h+=12;
+  if(ap==="AM"&&h===12)h=0;
+  var ds=dateStr.replace(/-/g,"");
+  return ds+"T"+String(h).padStart(2,"0")+String(mn).padStart(2,"0")+"00";
+}
+
+function addToGCal(id){
+  var x=ITEMS.find(function(i){return i.id===id;});
+  if(!x){toast("Item not found");return;}
+  var title=encodeURIComponent(x.title);
+  var start=toGCalDate(x.date,x.time);
+  var end=x.timeTo?toGCalDate(x.date,x.timeTo):toGCalDate(x.date,x.time);
+  // if no end time, add 1 hour
+  if(!x.timeTo&&x.time){
+    var m=x.time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if(m){
+      var h=parseInt(m[1]),mn=parseInt(m[2]),ap=m[3].toUpperCase();
+      if(ap==="PM"&&h<12)h+=12;if(ap==="AM"&&h===12)h=0;
+      h+=1;var ds=x.date.replace(/-/g,"");
+      end=ds+"T"+String(h%24).padStart(2,"0")+String(mn).padStart(2,"0")+"00";
+    }
+  }
+  var details=encodeURIComponent([x.desc||"",x.linkedTo||"",x.linkedTo2||""].filter(Boolean).join(" · "));
+  var location=encodeURIComponent(x.desc||"");
+  // build URL with 3 reminders via text (GCal handles reminder UI)
+  var url="https://calendar.google.com/calendar/render?action=TEMPLATE"
+    +"&text="+title
+    +"&dates="+start+"/"+end
+    +"&details="+details
+    +"&location="+location
+    +"&sf=true&output=xml";
+  window.open(url,"_blank");
+  toast("Opening Google Calendar 📅");
+}
+
+function addCLtoGCal(k,id){
+  var cl=(CHECKLIST[k]||[]).find(function(x){return x.id===id;});
+  if(!cl)return;
+  var title=encodeURIComponent("✅ "+cl.task);
+  var ds=k.split("-");var d=new Date(+ds[0],+ds[1],+ds[2]);
+  var dateS=d.getFullYear()+String(d.getMonth()).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
+  var url="https://calendar.google.com/calendar/render?action=TEMPLATE&text="+title+"&dates="+dateS+"/"+dateS+"&sf=true&output=xml";
+  window.open(url,"_blank");
+  toast("Opening Google Calendar 📅");
+}
 function save(){
   try{localStorage.setItem("v4_items",JSON.stringify(ITEMS));}catch(e){}
   try{localStorage.setItem("v4_cl",JSON.stringify(CHECKLIST));}catch(e){}
@@ -876,10 +1100,28 @@ function load(){
 }
 
 /* ===================== INIT ===================== */
+// Register service worker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').then(function(reg){
+    console.log('SW registered');
+  }).catch(function(err){console.log('SW error',err);});
+}
+
+// Request notification permission
+function requestNotifPermission(){
+  if('Notification' in window && Notification.permission==='default'){
+    Notification.requestPermission().then(function(p){
+      if(p==='granted')toast('Notifications enabled! ✅');
+    });
+  }
+}
+
 load();
 TODAYR();PLR();CLIR();PIPR();CONR();BLDR();LNDR();PRR();GUIDER();
-setInterval(function(){if(ACTIVE==="today")TODAYR();updateAlertBell();},60000);
+setInterval(function(){if(ACTIVE==="today")TODAYR();updateAlertBell();checkUpcomingNotifs();},60000);
 updateAlertBell();
+requestNotifPermission();
+checkUpcomingNotifs();
 </script>
 </body>
 </html>
